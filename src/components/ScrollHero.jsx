@@ -6,7 +6,6 @@ import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
 const MP4 = '/hero/master.mp4'
-const WEBM = '/hero/master.webm'
 const POSTER = '/hero/poster.jpg'
 
 // smoothstep helper
@@ -29,8 +28,10 @@ export default function ScrollHero() {
   const [ready, setReady] = useState(false)
   const [reduce, setReduce] = useState(false)
 
-  // Load the master video as an in-memory blob so it is always fully seekable
-  // (many hosts don't serve byte ranges, which freezes scrubbing at frame 0).
+  // Stream the master video with native HTTP range requests. Static hosts like
+  // Vercel serve byte ranges, so seeking works and playback starts instantly
+  // (no waiting to download the whole file). Falls back to a blob only if the
+  // host refuses ranges (video stays stuck near frame 0 after metadata loads).
   useEffect(() => {
     const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     if (prefersReduce) {
@@ -39,28 +40,38 @@ export default function ScrollHero() {
     }
     const v = videoRef.current
     if (!v) return
+    v.src = MP4
+    v.load()
+
+    // Safety net: if ranges aren't served, seeking to 5s won't take. In that
+    // case, fetch the whole file as a blob (fully seekable everywhere).
     let objectUrl
     let cancelled = false
-    fetch(MP4)
-      .then((r) => {
-        if (!r.ok) throw new Error('range')
-        return r.blob()
-      })
-      .then((b) => {
+    const check = setTimeout(() => {
+      if (cancelled || v.readyState < 1) return
+      const target = Math.min(5, (v.duration || 10) / 2)
+      try {
+        v.currentTime = target
+      } catch {}
+      setTimeout(() => {
         if (cancelled) return
-        objectUrl = URL.createObjectURL(b)
-        v.src = objectUrl
-        v.load()
-      })
-      .catch(() => {
-        // Fallback: direct source (works where range requests are served)
-        if (!cancelled) {
-          v.src = MP4
-          v.load()
+        if (v.currentTime < 0.5) {
+          fetch(MP4)
+            .then((r) => r.blob())
+            .then((b) => {
+              if (cancelled) return
+              objectUrl = URL.createObjectURL(b)
+              v.src = objectUrl
+              v.load()
+            })
+            .catch(() => {})
         }
-      })
+      }, 600)
+    }, 1200)
+
     return () => {
       cancelled = true
+      clearTimeout(check)
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [])
@@ -226,7 +237,6 @@ export default function ScrollHero() {
           disablePictureInPicture
           className="absolute inset-0 h-full w-full object-cover"
         >
-          <source src={WEBM} type="video/webm" />
           <source src={MP4} type="video/mp4" />
         </video>
 
