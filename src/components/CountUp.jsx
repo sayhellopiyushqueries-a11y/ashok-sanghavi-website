@@ -9,11 +9,6 @@ export default function CountUp({ value = 0, duration = 1600, prefix = '', suffi
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      setDisplay(value)
-      return
-    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {

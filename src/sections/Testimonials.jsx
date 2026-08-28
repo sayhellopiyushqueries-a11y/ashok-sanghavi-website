@@ -45,7 +45,6 @@ function Card(r, i) {
 
 export default function Testimonials() {
   const rowA = reviews
-  const rowB = [...reviews].reverse()
   return (
     <section className="relative overflow-hidden bg-ivory py-24 sm:py-32">
       <div
@@ -69,10 +68,9 @@ export default function Testimonials() {
         </div>
       </div>
 
-      {/* Two marquee rows, gliding in opposite directions */}
-      <Reveal delay={120} className="mt-16 space-y-5">
-        <Marquee items={rowA} renderItem={Card} duration={52} />
-        <Marquee items={rowB} renderItem={Card} duration={62} reverse />
+      {/* Single gliding marquee row */}
+      <Reveal delay={120} className="mt-16">
+        <Marquee items={rowA} renderItem={Card} duration={56} />
       </Reveal>
 
       <div className="container-lux relative">

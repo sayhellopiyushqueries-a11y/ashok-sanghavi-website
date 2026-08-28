@@ -184,7 +184,7 @@ export default function Header() {
                         className={`absolute top-full pt-4 ${item.to === '/services' ? 'left-1/2 -translate-x-1/2' : 'left-0'}`}
                       >
                         {item.to === '/services' ? (
-                          <div className="w-[42rem] rounded-2xl border border-gold/20 bg-ivory/97 p-3 shadow-lift backdrop-blur-xl">
+                          <div className="w-[42rem] rounded-2xl border border-gold/25 bg-ivory p-3 shadow-lift" style={{ boxShadow: '0 30px 70px -28px rgba(14,58,40,0.5)' }}>
                             <div className="mb-1 flex items-center justify-between px-3 pt-2">
                               <span className="eyebrow">What we do</span>
                               <Link to="/services" className="font-sans text-[0.76rem] font-semibold text-emerald hover:text-gold-deep">
@@ -210,7 +210,7 @@ export default function Header() {
                             </div>
                           </div>
                         ) : (
-                          <div className="w-72 rounded-2xl border border-gold/20 bg-ivory/95 p-2 shadow-lift backdrop-blur-xl">
+                          <div className="w-72 rounded-2xl border border-gold/25 bg-ivory p-2 shadow-lift" style={{ boxShadow: '0 30px 70px -28px rgba(14,58,40,0.5)' }}>
                             {item.children.map((c) => (
                               <Link
                                 key={c.to}

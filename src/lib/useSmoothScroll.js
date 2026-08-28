@@ -16,8 +16,20 @@ export function getLenis() {
 // ticker and keeps ScrollTrigger in sync so pinned scrubbing stays smooth.
 export function useSmoothScroll() {
   useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) return
+    // On touch devices (iOS/Android) use native scroll — it is far more reliable
+    // there than a JS smooth-scroll library. ScrollTrigger + reveals still run on
+    // native scroll, so all animations keep working. Also let ScrollTrigger
+    // measure regardless.
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
+    const refreshAll = () => ScrollTrigger.refresh()
+    window.addEventListener('load', refreshAll)
+    const tt = setTimeout(refreshAll, 600)
+    if (isTouch) {
+      return () => {
+        window.removeEventListener('load', refreshAll)
+        clearTimeout(tt)
+      }
+    }
 
     lenis = new Lenis({
       duration: 1.1,
@@ -35,15 +47,10 @@ export function useSmoothScroll() {
     gsap.ticker.add(onTick)
     gsap.ticker.lagSmoothing(0)
 
-    // Let ScrollTrigger measure once fonts/layout settle.
-    const refresh = () => ScrollTrigger.refresh()
-    window.addEventListener('load', refresh)
-    const t = setTimeout(refresh, 600)
-
     return () => {
       gsap.ticker.remove(onTick)
-      window.removeEventListener('load', refresh)
-      clearTimeout(t)
+      window.removeEventListener('load', refreshAll)
+      clearTimeout(tt)
       lenis.destroy()
       lenis = null
     }

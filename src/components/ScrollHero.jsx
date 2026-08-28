@@ -33,11 +33,6 @@ export default function ScrollHero() {
   // (no waiting to download the whole file). Falls back to a blob only if the
   // host refuses ranges (video stays stuck near frame 0 after metadata loads).
   useEffect(() => {
-    const prefersReduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (prefersReduce) {
-      setReduce(true)
-      return
-    }
     const v = videoRef.current
     if (!v) return
     v.src = MP4
@@ -91,6 +86,7 @@ export default function ScrollHero() {
   // Scroll → progress via ScrollTrigger; video seek + caption timing in a rAF.
   useEffect(() => {
     if (reduce) return
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
     const v = videoRef.current
     const wrap = wrapRef.current
     if (!v || !wrap) return
@@ -132,8 +128,12 @@ export default function ScrollHero() {
         } catch {}
       }
 
-      // opening still: fully visible at the very top, crossfades to video on scroll
-      if (heroImgRef.current) heroImgRef.current.style.opacity = String(1 - ss(0.004, 0.05, p))
+      // opening still: fully visible at the top, crossfades to video on scroll.
+      // On touch (iOS/Android) keep the still visible — those devices can't
+      // reliably repaint a scroll-scrubbed video, so the image + animated
+      // captions are the dependable premium hero there.
+      if (heroImgRef.current)
+        heroImgRef.current.style.opacity = isTouch ? '1' : String(1 - ss(0.004, 0.05, p))
 
       // progress rail fill (desktop vertical + mobile horizontal)
       const clamped = Math.max(0.001, Math.min(1, p))

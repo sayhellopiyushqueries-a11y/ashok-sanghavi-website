@@ -8,7 +8,6 @@ export default function Parallax({ children, amount = 60, className = '' }) {
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
     const tween = gsap.fromTo(
       el,
       { yPercent: -amount / 10 },

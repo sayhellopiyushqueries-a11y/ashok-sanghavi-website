@@ -41,9 +41,13 @@ export default function Intro() {
                   </span>
                 </div>
               </div>
-              {/* Signature plate */}
-              <div className="absolute -bottom-5 left-6 rounded-full border border-gold/40 bg-ivory px-5 py-2.5 shadow-soft">
-                <span className="font-display text-lg text-emerald">Ashok Sanghavi</span>
+              {/* Credential plate */}
+              <div className="absolute -bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-3 shadow-soft">
+                <span className="font-display text-[1.05rem] leading-none text-emerald">Ashok Sanghavi</span>
+                <span className="h-3.5 w-px bg-gold/50" />
+                <span className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+                  CFP · ChFC · CLU
+                </span>
               </div>
             </div>
           </Reveal>

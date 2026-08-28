@@ -8,10 +8,6 @@ export default function Reveal({ children, className = '', delay = 0, as: Tag = 
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      el.classList.add('is-in')
-      return
-    }
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
