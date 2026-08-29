@@ -6,7 +6,6 @@ import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
 const MP4 = '/hero/master.mp4'
-const POSTER = '/hero/poster.jpg'
 
 // smoothstep helper
 const ss = (a, b, x) => {
@@ -20,7 +19,6 @@ export default function ScrollHero() {
   const videoRef = useRef(null)
   const barRef = useRef(null)
   const barMobileRef = useRef(null)
-  const heroImgRef = useRef(null)
   const captionRefs = useRef([])
   const hintRef = useRef(null)
   const progress = useRef(0)
@@ -51,10 +49,7 @@ export default function ScrollHero() {
         const pr = v.play()
         if (pr && pr.catch) pr.catch(() => {})
       }
-      const onPlaying = () => {
-        if (heroImgRef.current) heroImgRef.current.style.opacity = '0'
-        setReady(true)
-      }
+      const onPlaying = () => setReady(true)
       v.addEventListener('loadeddata', tryPlay)
       v.addEventListener('canplay', tryPlay)
       v.addEventListener('playing', onPlaying)
@@ -153,12 +148,6 @@ export default function ScrollHero() {
         }
       }
 
-      // Opening still: fully visible at the top, crossfades to the video on
-      // scroll. On touch the still is faded out by the video's 'playing' event
-      // instead (so the moving video shows from the very top).
-      if (heroImgRef.current && !isTouch)
-        heroImgRef.current.style.opacity = String(1 - ss(0.004, 0.05, p))
-
       // progress rail fill (desktop vertical + mobile horizontal)
       const clamped = Math.max(0.001, Math.min(1, p))
       if (barRef.current) barRef.current.style.transform = `scaleY(${clamped})`
@@ -231,7 +220,7 @@ export default function ScrollHero() {
   if (reduce) {
     return (
       <section className="relative h-svh w-full overflow-hidden">
-        <img src={POSTER} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #17603F 0%, #124A32 55%, #0E3A28 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(14,58,40,0.35), rgba(14,58,40,0.12) 40%, rgba(14,58,40,0.55))' }} />
         <div className="relative z-10 flex h-full items-center">
           <div className="container-lux">
@@ -254,7 +243,6 @@ export default function ScrollHero() {
         {/* Video */}
         <video
           ref={videoRef}
-          poster={POSTER}
           muted
           playsInline
           preload="auto"
@@ -263,16 +251,6 @@ export default function ScrollHero() {
         >
           <source src={MP4} type="video/mp4" />
         </video>
-
-        {/* Opening still — the crisp HD image shows when the site loads and at
-            the very top, then crossfades to the scrubbing video as you scroll */}
-        <img
-          ref={heroImgRef}
-          src={POSTER}
-          alt="Ashok Sanghavi Financial Advisory building"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ willChange: 'opacity' }}
-        />
 
         {/* Premium light overlays — never a heavy dark scrim */}
         <div
