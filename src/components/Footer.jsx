@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { firm, services, social } from '../lib/site'
 import { partners } from '../lib/content'
 import Icon from './Icons'
+import { ParallaxFloating, FloatingElement } from './ParallaxFloating'
 
 const quickLinks = [
   { label: 'Home', to: '/' },
@@ -40,9 +41,34 @@ export default function Footer() {
       {/* Gold accent line clearly separates the footer from the CTA above */}
       <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(198,162,83,0.9), transparent)' }} />
 
-      {/* Brand banner — a calm, premium statement (details live in the columns) */}
-      <div className="border-b border-ivory/10">
-        <div className="container-lux flex flex-col items-center gap-7 py-16 text-center">
+      {/* Brand banner — a calm, premium statement (details live in the columns).
+          Faint gold/sage shapes drift with the pointer for quiet depth. */}
+      <div className="relative overflow-hidden border-b border-ivory/10">
+        <ParallaxFloating sensitivity={1.2} className="hidden md:block">
+          <FloatingElement className="left-[8%] top-[18%]" depth={0.6}>
+            <span className="block h-9 w-9 rotate-45 rounded-md border border-gold/25" />
+          </FloatingElement>
+          <FloatingElement className="left-[18%] top-[60%]" depth={1.6}>
+            <span className="block h-2.5 w-2.5 rounded-full bg-gold/40" />
+          </FloatingElement>
+          <FloatingElement className="right-[10%] top-[22%]" depth={2.4}>
+            <span className="block h-14 w-14 rounded-full border border-sage/20" />
+          </FloatingElement>
+          <FloatingElement className="right-[16%] bottom-[20%]" depth={1}>
+            <span className="block h-6 w-6 rotate-45 bg-gold/12" />
+          </FloatingElement>
+          <FloatingElement className="left-[46%] top-[10%]" depth={3}>
+            <span className="block h-2 w-2 rounded-full bg-gold-light/60" />
+          </FloatingElement>
+          <FloatingElement className="right-[38%] bottom-[14%]" depth={2}>
+            <span className="block h-3.5 w-3.5 rounded-full border border-gold/30" />
+          </FloatingElement>
+          <FloatingElement className="left-[30%] bottom-[24%]" depth={0.9}>
+            <span className="block h-1.5 w-1.5 rounded-full bg-sage/50" />
+          </FloatingElement>
+        </ParallaxFloating>
+
+        <div className="container-lux relative z-10 flex flex-col items-center gap-7 py-16 text-center">
           <Monogram size="h-16 w-16" />
           <div className="flex items-center gap-4">
             <span className="hidden h-px w-12 bg-gold/50 sm:block" />
