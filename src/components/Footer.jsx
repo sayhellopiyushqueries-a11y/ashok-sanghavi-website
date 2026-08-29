@@ -3,6 +3,7 @@ import { firm, services, social } from '../lib/site'
 import { partners } from '../lib/content'
 import Icon from './Icons'
 import { ParallaxFloating, FloatingElement } from './ParallaxFloating'
+import TextHoverEffect from './TextHoverEffect'
 
 const quickLinks = [
   { label: 'Home', to: '/' },
@@ -43,6 +44,12 @@ export default function Footer() {
     >
       {/* Gold accent line clearly separates the footer from the CTA above */}
       <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(198,162,83,0.9), transparent)' }} />
+
+      {/* Soft gold radial glow for depth */}
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(120% 80% at 50% 100%, rgba(198,162,83,0.12), transparent 55%)' }}
+      />
 
       {/* Brand banner — a calm, premium statement on a warm cream band.
           Only shown on home, about and contact. */}
@@ -89,7 +96,7 @@ export default function Footer() {
       )}
 
       {/* Columns */}
-      <div className="container-lux grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
+      <div className="container-lux relative z-10 grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
         <div className="lg:pr-8">
           <p className="max-w-xs font-sans text-[0.95rem] leading-relaxed text-sage-light/90">
             A fiduciary tax and wealth planning firm in Elkhart, Indiana. Relationship first, client first, for over
@@ -160,8 +167,15 @@ export default function Footer() {
         </div>
       </div>
 
+      {/* Giant brand wordmark — hover to reveal the gold gradient */}
+      <div className="relative z-10 hidden select-none px-6 pb-4 lg:block" aria-hidden="true">
+        <div className="mx-auto w-full max-w-5xl" style={{ aspectRatio: '300 / 58' }}>
+          <TextHoverEffect text="Ashok Sanghavi" />
+        </div>
+      </div>
+
       {/* Affiliations */}
-      <div className="border-t border-ivory/10">
+      <div className="relative z-10 border-t border-ivory/10">
         <div className="container-lux flex flex-col items-center gap-5 py-8 sm:flex-row sm:justify-between">
           <span className="footer-head">Affiliations</span>
           <div className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
@@ -181,7 +195,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-ivory/10">
+      <div className="relative z-10 border-t border-ivory/10">
         <div className="container-lux flex flex-col items-center gap-2 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <p className="font-sans text-[0.78rem] text-sage-light/60">
             © {year} {firm.name}. All rights reserved.
