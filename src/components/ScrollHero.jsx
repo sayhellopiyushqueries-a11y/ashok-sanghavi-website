@@ -28,18 +28,49 @@ export default function ScrollHero() {
   const [ready, setReady] = useState(false)
   const [reduce, setReduce] = useState(false)
 
-  // Stream the master video with native HTTP range requests. Static hosts like
-  // Vercel serve byte ranges, so seeking works and playback starts instantly
-  // (no waiting to download the whole file). Falls back to a blob only if the
-  // host refuses ranges (video stays stuck near frame 0 after metadata loads).
+  // Video setup. Two very different strategies:
+  //   • Desktop (fine pointer): stream via native HTTP range requests and
+  //     scrub by seeking on scroll. Static hosts like Vercel serve byte ranges,
+  //     so seeking works instantly. A blob fallback covers hosts that refuse
+  //     ranges (video would otherwise stay stuck near frame 0).
+  //   • Touch (iOS/Android): seeking-on-scroll cannot repaint reliably, so we
+  //     let the clip AUTOPLAY and LOOP as an ambient, muted, inline background —
+  //     which plays on every mobile browser. Captions still animate on scroll.
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
     v.src = MP4
     v.load()
 
-    // Safety net: if ranges aren't served, seeking to 5s won't take. In that
-    // case, fetch the whole file as a blob (fully seekable everywhere).
+    if (isTouch) {
+      v.loop = true
+      v.muted = true
+      v.autoplay = true
+      const tryPlay = () => {
+        const pr = v.play()
+        if (pr && pr.catch) pr.catch(() => {})
+      }
+      const onPlaying = () => {
+        if (heroImgRef.current) heroImgRef.current.style.opacity = '0'
+        setReady(true)
+      }
+      v.addEventListener('loadeddata', tryPlay)
+      v.addEventListener('canplay', tryPlay)
+      v.addEventListener('playing', onPlaying)
+      tryPlay()
+      // A first touch anywhere re-attempts play, in case autoplay was deferred.
+      const onTouch = () => tryPlay()
+      window.addEventListener('touchstart', onTouch, { once: true, passive: true })
+      return () => {
+        v.removeEventListener('loadeddata', tryPlay)
+        v.removeEventListener('canplay', tryPlay)
+        v.removeEventListener('playing', onPlaying)
+        window.removeEventListener('touchstart', onTouch)
+      }
+    }
+
+    // Desktop: seek-test, and fall back to a fully-seekable blob if needed.
     let objectUrl
     let cancelled = false
     const check = setTimeout(() => {
@@ -71,18 +102,6 @@ export default function ScrollHero() {
     }
   }, [])
 
-  // Prime playback on first touch so iOS paints seeked frames.
-  useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    const prime = () => {
-      v.play().then(() => v.pause()).catch(() => {})
-      window.removeEventListener('touchstart', prime)
-    }
-    window.addEventListener('touchstart', prime, { once: true, passive: true })
-    return () => window.removeEventListener('touchstart', prime)
-  }, [])
-
   // Scroll → progress via ScrollTrigger; video seek + caption timing in a rAF.
   useEffect(() => {
     if (reduce) return
@@ -94,9 +113,11 @@ export default function ScrollHero() {
     let duration = 48
     const onMeta = () => {
       duration = v.duration || 48
-      try {
-        v.currentTime = 0.01
-      } catch {}
+      if (!isTouch) {
+        try {
+          v.currentTime = 0.01
+        } catch {}
+      }
       setReady(true)
     }
     v.addEventListener('loadedmetadata', onMeta)
@@ -120,20 +141,23 @@ export default function ScrollHero() {
       progress.current += (target.current - progress.current) * 0.12
       const p = progress.current
 
-      // seek video (coalesced — never queue while decoder is seeking)
-      const wantTime = Math.max(0.001, Math.min(duration - 0.05, p * duration))
-      if (v.readyState >= 1 && !v.seeking && Math.abs(v.currentTime - wantTime) > 0.02) {
-        try {
-          v.currentTime = wantTime
-        } catch {}
+      // Desktop only: scrub the video by seeking (coalesced — never queue while
+      // the decoder is mid-seek). On touch the clip autoplays/loops instead, so
+      // we leave playback alone.
+      if (!isTouch) {
+        const wantTime = Math.max(0.001, Math.min(duration - 0.05, p * duration))
+        if (v.readyState >= 1 && !v.seeking && Math.abs(v.currentTime - wantTime) > 0.02) {
+          try {
+            v.currentTime = wantTime
+          } catch {}
+        }
       }
 
-      // opening still: fully visible at the top, crossfades to video on scroll.
-      // On touch (iOS/Android) keep the still visible — those devices can't
-      // reliably repaint a scroll-scrubbed video, so the image + animated
-      // captions are the dependable premium hero there.
-      if (heroImgRef.current)
-        heroImgRef.current.style.opacity = isTouch ? '1' : String(1 - ss(0.004, 0.05, p))
+      // Opening still: fully visible at the top, crossfades to the video on
+      // scroll. On touch the still is faded out by the video's 'playing' event
+      // instead (so the moving video shows from the very top).
+      if (heroImgRef.current && !isTouch)
+        heroImgRef.current.style.opacity = String(1 - ss(0.004, 0.05, p))
 
       // progress rail fill (desktop vertical + mobile horizontal)
       const clamped = Math.max(0.001, Math.min(1, p))
