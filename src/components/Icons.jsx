@@ -8,6 +8,7 @@ import {
   CalendarDays, Calculator, Play, BookOpen, FileText, Quote, Star, Award, Scale,
   Handshake, Briefcase, Coins, Umbrella, Clock, Send, Sparkles, Home,
   Compass, Target, Gem, LineChart, GraduationCap, PiggyBank, Receipt, Percent,
+  X, Cookie, SlidersHorizontal,
 } from 'lucide-react'
 
 // Brand marks are not part of Lucide (removed upstream). Render them as stroke
@@ -25,6 +26,7 @@ const map = {
   // ui
   arrow: ArrowRight, arrowUpRight: ArrowUpRight, arrowLeft: ArrowLeft,
   chevronRight: ChevronRight, check: Check, home: Home, send: Send, sparkles: Sparkles,
+  close: X, cookie: Cookie, settings: SlidersHorizontal,
   // services / concepts
   growth: TrendingUp, sun: Sunrise, shield: ShieldCheck, legacy: Landmark,
   lock: Lock, building: Building2, people: Users, heart: HeartHandshake,
