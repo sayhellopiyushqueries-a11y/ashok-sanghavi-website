@@ -348,12 +348,15 @@ export default function ScrollHero() {
         {/* Captions — anchored to the lower-left third so they never collide
             with the building sign that sits high-centre in the exterior scenes */}
         <div className="absolute inset-x-0 bottom-[15vh] z-20 sm:bottom-[16vh]">
-          <div className="container-lux relative">
+          {/* Full-width (not the centred container) so the caption stays anchored
+              near the viewport's left edge and never drifts over the building
+              sign on wide screens. */}
+          <div className="relative">
             {heroScenes.map((scene, i) => (
               <div
                 key={i}
                 ref={(el) => (captionRefs.current[i] = el)}
-                className="absolute bottom-0 left-6 max-w-[17rem] sm:left-8 sm:max-w-[24rem] lg:max-w-[30rem]"
+                className="absolute bottom-0 left-6 max-w-[16rem] sm:left-10 sm:max-w-[22rem] lg:left-16 lg:max-w-[26rem]"
                 style={{ opacity: 0, transform: 'translateY(30px)', willChange: 'opacity, transform' }}
               >
                 <p className="eyebrow text-gold-light" style={{ textShadow: '0 2px 18px rgba(14,58,40,0.55)' }}>
