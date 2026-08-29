@@ -98,29 +98,10 @@ export default function ScrollHero() {
     const isTouch = window.matchMedia('(pointer: coarse)').matches
 
     if (isTouch) {
-      v.src = MP4
-      v.load()
-      v.loop = true
-      v.muted = true
-      v.autoplay = true
-      const tryPlay = () => {
-        const pr = v.play()
-        if (pr && pr.catch) pr.catch(() => {})
-      }
-      const onPlaying = () => setReady(true)
-      v.addEventListener('loadeddata', tryPlay)
-      v.addEventListener('canplay', tryPlay)
-      v.addEventListener('playing', onPlaying)
-      tryPlay()
-      // A first touch anywhere re-attempts play, in case autoplay was deferred.
-      const onTouch = () => tryPlay()
-      window.addEventListener('touchstart', onTouch, { once: true, passive: true })
-      return () => {
-        v.removeEventListener('loadeddata', tryPlay)
-        v.removeEventListener('canplay', tryPlay)
-        v.removeEventListener('playing', onPlaying)
-        window.removeEventListener('touchstart', onTouch)
-      }
+      // Phone/tablet: no video at all. The poster with drifting leaves IS the
+      // hero here; captions still animate on scroll. Video playback and
+      // scroll-scrubbing are desktop-only.
+      return
     }
 
     // Desktop: the clip is scrubbed by seeking on scroll. On a CDN, each seek to
@@ -209,8 +190,13 @@ export default function ScrollHero() {
       // video has decoded its first frame (a one-time flag — readyState itself
       // dips during every scrub-seek and would flicker the poster back).
       if (heroImgRef.current) {
-        if (!hasVideoRef.current && v.readyState >= 2) hasVideoRef.current = true
-        heroImgRef.current.style.opacity = hasVideoRef.current ? String(1 - ss(0.004, 0.06, p)) : '1'
+        if (isTouch) {
+          // Phone: the poster + leaves stays put — there is no video to reveal.
+          heroImgRef.current.style.opacity = '1'
+        } else {
+          if (!hasVideoRef.current && v.readyState >= 2) hasVideoRef.current = true
+          heroImgRef.current.style.opacity = hasVideoRef.current ? String(1 - ss(0.004, 0.06, p)) : '1'
+        }
       }
 
       // progress rail fill (desktop vertical + mobile horizontal)
