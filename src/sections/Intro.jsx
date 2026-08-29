@@ -41,11 +41,13 @@ export default function Intro() {
                   </span>
                 </div>
               </div>
-              {/* Credential plate */}
-              <div className="absolute -bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-4 shadow-soft">
-                <span className="font-display text-[1.05rem] leading-tight text-emerald">Ashok Sanghavi</span>
+            </div>
+            {/* Credential plate — placed below the portrait so nothing clips it */}
+            <div className="mt-9 flex justify-center">
+              <div className="flex items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-3.5 shadow-soft">
+                <span className="font-display text-[1.05rem] text-emerald">Ashok Sanghavi</span>
                 <span className="h-4 w-px shrink-0 bg-gold/50" />
-                <span className="font-sans text-[0.66rem] font-semibold uppercase leading-tight tracking-[0.16em] text-ink-muted">
+                <span className="font-sans text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-ink-muted">
                   CFP · ChFC · CLU
                 </span>
               </div>

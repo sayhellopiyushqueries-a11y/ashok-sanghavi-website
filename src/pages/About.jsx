@@ -30,9 +30,13 @@ export default function About() {
           <Reveal className="mx-auto w-full max-w-sm lg:max-w-none">
             {/* EDIT: drop portrait at /public/portrait.jpg */}
             <ImageSlot src="/portrait.jpg" label="Portrait of Ashok Sanghavi" ratio="4 / 5" framed parallax />
-            <div className="relative">
-              <div className="absolute -top-5 left-6 rounded-full border border-gold/40 bg-ivory px-5 py-2.5 shadow-soft">
-                <span className="font-display text-lg text-emerald">Ashok Sanghavi</span>
+            <div className="mt-9 flex justify-center">
+              <div className="flex items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-3.5 shadow-soft">
+                <span className="font-display text-[1.05rem] text-emerald">Ashok Sanghavi</span>
+                <span className="h-4 w-px shrink-0 bg-gold/50" />
+                <span className="font-sans text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+                  CFP · ChFC · CLU
+                </span>
               </div>
             </div>
           </Reveal>
