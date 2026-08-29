@@ -123,6 +123,7 @@ export default function BlogArticle() {
         eyebrow="Your turn"
         heading="Wondering how this applies to you?"
         sub="Every situation is different. A short conversation is the quickest way to find out what fits yours."
+        variant="note"
       />
     </PageTransition>
   )

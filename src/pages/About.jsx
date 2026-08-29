@@ -188,6 +188,7 @@ export default function About() {
         eyebrow="Work with us"
         heading="Ready for an advisor who is legally on your side?"
         sub="Meet Ashok and the team for a relaxed, no obligation conversation about where you are and where you want to be."
+        variant="quote"
       />
     </PageTransition>
   )

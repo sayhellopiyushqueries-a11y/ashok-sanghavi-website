@@ -104,6 +104,7 @@ export default function BlogIndex() {
         eyebrow="Put it to work"
         heading="Ideas are only worth what you do with them."
         sub="If something here made you think, let us explore what it could mean for your own plan. No cost, no obligation."
+        variant="editorial"
       />
     </PageTransition>
   )

@@ -61,6 +61,7 @@ export default function CoreBeliefs() {
         eyebrow="Experience it"
         heading="See what a relationship first practice feels like."
         sub="Beliefs are easy to write and harder to live by. Let us show you the difference in a single conversation."
+        variant="minimal"
       />
     </PageTransition>
   )

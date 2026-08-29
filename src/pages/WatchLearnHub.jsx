@@ -68,6 +68,7 @@ export default function WatchLearnHub() {
         eyebrow="Have a question?"
         heading="Prefer to talk it through in person?"
         sub="Every idea here is easier with context. We are glad to walk you through what applies to your situation."
+        variant="ring"
       />
     </PageTransition>
   )

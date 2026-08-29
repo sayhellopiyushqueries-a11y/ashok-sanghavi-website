@@ -82,6 +82,7 @@ export default function WatchLearnSection() {
         eyebrow="Curious about one of these?"
         heading="Let us show you how it applies to you."
         sub="These ideas come to life when they are matched to your situation. A short conversation is the best place to start."
+        variant="divider"
       />
     </PageTransition>
   )

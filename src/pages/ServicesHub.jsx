@@ -96,6 +96,7 @@ export default function ServicesHub() {
         eyebrow="Find your fit"
         heading="Not sure where to start? Let us point the way."
         sub="Tell us a little about your situation and we will show you which of these disciplines matters most for you."
+        variant="seal"
       />
     </PageTransition>
   )

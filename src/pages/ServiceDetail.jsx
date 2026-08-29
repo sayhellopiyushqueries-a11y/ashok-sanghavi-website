@@ -143,6 +143,7 @@ export default function ServiceDetail() {
         eyebrow="Take the next step"
         heading={`Let us build your ${service.title.toLowerCase()} strategy.`}
         sub="A short, no cost conversation is the best way to see what is possible for your situation. No pressure, ever."
+        variant="panel"
       />
     </PageTransition>
   )

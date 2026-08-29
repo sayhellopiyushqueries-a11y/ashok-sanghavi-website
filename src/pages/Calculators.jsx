@@ -102,6 +102,7 @@ export default function Calculators() {
         eyebrow="Beyond the numbers"
         heading="A calculator is a start. The plan is the rest."
         sub="Numbers on a screen cannot see your whole picture. We can. Let us turn an estimate into a real strategy."
+        variant="contact"
       />
     </PageTransition>
   )
