@@ -6,7 +6,7 @@ import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
 // Versioned filename busts the year-long immutable cache when the video changes.
-const MP4 = '/hero/master-v2.mp4'
+const MP4 = '/hero/master-v3.mp4'
 
 // smoothstep helper
 const ss = (a, b, x) => {
@@ -66,34 +66,34 @@ export default function ScrollHero() {
       }
     }
 
-    // Desktop: seek-test, and fall back to a fully-seekable blob if needed.
+    // Desktop: the clip is scrubbed by seeking on scroll. On a CDN each seek to
+    // an un-buffered spot triggers a byte-range fetch (network latency) → janky
+    // scrub, even though it's smooth on localhost where the file is local. Fix:
+    // proactively download the whole clip once as a blob and swap to it, so
+    // every seek is instant in-memory. The native src above paints a first
+    // frame while the blob loads (the "Preparing the journey" shimmer covers it).
     let objectUrl
     let cancelled = false
-    const check = setTimeout(() => {
-      if (cancelled || v.readyState < 1) return
-      const target = Math.min(5, (v.duration || 10) / 2)
-      try {
-        v.currentTime = target
-      } catch {}
-      setTimeout(() => {
+    fetch(MP4)
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error('range'))))
+      .then((b) => {
         if (cancelled) return
-        if (v.currentTime < 0.5) {
-          fetch(MP4)
-            .then((r) => r.blob())
-            .then((b) => {
-              if (cancelled) return
-              objectUrl = URL.createObjectURL(b)
-              v.src = objectUrl
-              v.load()
-            })
-            .catch(() => {})
+        objectUrl = URL.createObjectURL(b)
+        const resume = v.currentTime
+        v.src = objectUrl
+        v.load()
+        const restore = () => {
+          try {
+            v.currentTime = resume
+          } catch {}
+          v.removeEventListener('loadedmetadata', restore)
         }
-      }, 600)
-    }, 1200)
+        v.addEventListener('loadedmetadata', restore)
+      })
+      .catch(() => {})
 
     return () => {
       cancelled = true
-      clearTimeout(check)
       if (objectUrl) URL.revokeObjectURL(objectUrl)
     }
   }, [])
