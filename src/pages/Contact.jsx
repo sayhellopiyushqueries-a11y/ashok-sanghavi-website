@@ -181,9 +181,9 @@ export default function Contact() {
                     key={s.label}
                     href={s.href}
                     aria-label={s.label}
-                    className="grid h-11 w-11 place-items-center rounded-full border border-gold/30 text-emerald transition-all duration-400 hover:-translate-y-0.5 hover:border-gold hover:bg-gold/10 hover:text-gold-deep"
+                    className="grid h-11 w-11 place-items-center rounded-full border border-gold/30 transition-all duration-400 hover:-translate-y-0.5 hover:border-gold hover:bg-gold/10"
                   >
-                    <Icon name={s.icon} size={18} />
+                    <Icon name={s.icon} size={24} />
                   </a>
                 ))}
               </div>

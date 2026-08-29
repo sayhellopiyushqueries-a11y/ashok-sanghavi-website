@@ -1,34 +1,33 @@
-import { useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 
-// Lightweight scroll reveal: rise + fade + de-blur via the `.reveal` class,
-// triggered by IntersectionObserver. `delay` staggers siblings, `variant`
-// picks a flavour ('up' default, 'left', 'right', 'scale', 'fade').
-export default function Reveal({ children, className = '', delay = 0, variant = 'up', as: Tag = 'div', ...rest }) {
-  const ref = useRef(null)
+// Premium scroll reveal, driven by Framer Motion. Same API as before
+// (`delay`, `variant`, `as`) so every call site keeps working — no blur,
+// just a refined rise/slide/scale with a soft, expensive easing curve.
+const EASE = [0.16, 1, 0.3, 1]
 
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            el.classList.add('is-in')
-            io.unobserve(el)
-          }
-        })
-      },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' }
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [])
+const variants = {
+  up:    { hidden: { opacity: 0, y: 30 },              show: { opacity: 1, y: 0, x: 0 } },
+  left:  { hidden: { opacity: 0, x: -44 },             show: { opacity: 1, x: 0, y: 0 } },
+  right: { hidden: { opacity: 0, x: 44 },              show: { opacity: 1, x: 0, y: 0 } },
+  scale: { hidden: { opacity: 0, y: 22, scale: 0.94 }, show: { opacity: 1, y: 0, scale: 1 } },
+  fade:  { hidden: { opacity: 0 },                     show: { opacity: 1 } },
+}
 
-  const variantClass = variant && variant !== 'up' ? `reveal--${variant}` : ''
+export default function Reveal({ children, className = '', delay = 0, variant = 'up', as = 'div', ...rest }) {
+  const MotionTag = motion[as] || motion.div
+  const v = variants[variant] || variants.up
 
   return (
-    <Tag ref={ref} className={`reveal ${variantClass} ${className}`} style={{ transitionDelay: `${delay}ms` }} {...rest}>
+    <MotionTag
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: '0px 0px -12% 0px' }}
+      variants={v}
+      transition={{ duration: 0.85, ease: EASE, delay: delay / 1000 }}
+      {...rest}
+    >
       {children}
-    </Tag>
+    </MotionTag>
   )
 }

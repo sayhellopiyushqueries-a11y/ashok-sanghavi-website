@@ -1,4 +1,4 @@
-import { useParams, Navigate, Link } from 'react-router-dom'
+import { useParams, Navigate } from 'react-router-dom'
 import PageTransition from '../components/PageTransition'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
@@ -74,51 +74,6 @@ export default function WatchLearnSection() {
                 </Reveal>
               )
             })}
-
-            {/* Closing feature card — turns the trailing empty cell into an
-                invitation to bring these ideas into a real plan. */}
-            <Reveal delay={(items.length % 3) * 80} variant="scale">
-              <div
-                className="group relative flex h-full flex-col overflow-hidden rounded-2xl text-ivory"
-                style={{ background: 'linear-gradient(155deg, #14563B 0%, #0E3A28 60%, #0A3020 100%)' }}
-              >
-                {/* gold glow + double hairline frame */}
-                <span
-                  className="pointer-events-none absolute inset-0 opacity-80"
-                  style={{ background: 'radial-gradient(85% 60% at 100% 0%, rgba(198,162,83,0.22), transparent 60%)' }}
-                />
-                <span className="pointer-events-none absolute inset-3 rounded-[1rem] border border-gold/25" />
-                <span className="pointer-events-none absolute inset-[0.9rem] rounded-[0.85rem] border border-gold/10" />
-
-                {/* faux thumbnail band so it aligns with the video cards */}
-                <div className="relative flex aspect-video items-center justify-center overflow-hidden">
-                  <span
-                    className="pointer-events-none absolute inset-0 opacity-70"
-                    style={{ background: 'radial-gradient(60% 80% at 50% 40%, rgba(198,162,83,0.16), transparent 70%)' }}
-                  />
-                  <span className="relative grid h-16 w-16 place-items-center rounded-full border border-gold/50 text-gold-light transition-transform duration-500 group-hover:scale-110">
-                    <Icon name="compass" size={26} />
-                  </span>
-                </div>
-
-                <div className="relative flex flex-1 flex-col p-6">
-                  <span className="font-sans text-[0.6rem] uppercase tracking-[0.24em] text-gold-light">Your turn</span>
-                  <h3 className="mt-3 font-display text-[1.2rem] leading-snug text-ivory">
-                    Bring these ideas into your own plan.
-                  </h3>
-                  <p className="mt-3 flex-1 text-[0.96rem] leading-relaxed text-sage-light">
-                    Watching is a start. The value comes when a concept is matched to your numbers and your goals.
-                  </p>
-                  <Link
-                    to="/contact"
-                    className="mt-5 inline-flex items-center gap-2 font-sans text-[0.86rem] font-semibold text-gold-light transition-colors hover:text-ivory"
-                  >
-                    Talk with Ashok
-                    <Icon name="arrow" size={16} className="transition-transform duration-500 group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
-            </Reveal>
           </div>
         </div>
       </section>

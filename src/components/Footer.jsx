@@ -14,9 +14,9 @@ const quickLinks = [
   { label: 'Contact', to: '/contact' },
 ]
 
-function Monogram({ size = 'h-12 w-12' }) {
+function Monogram({ size = 'h-12 w-12', borderClass = 'border-gold/50', textClass = 'text-gold-light' }) {
   return (
-    <span className={`relative grid ${size} shrink-0 place-items-center overflow-hidden rounded-full border border-gold/50`}>
+    <span className={`relative grid ${size} shrink-0 place-items-center overflow-hidden rounded-full border ${borderClass}`}>
       <img
         src="/logo.svg"
         alt=""
@@ -26,7 +26,7 @@ function Monogram({ size = 'h-12 w-12' }) {
           e.currentTarget.nextElementSibling.style.display = 'block'
         }}
       />
-      <span className="font-display text-xl text-gold-light" style={{ display: 'none' }}>AS</span>
+      <span className={`font-display text-xl ${textClass}`} style={{ display: 'none' }}>AS</span>
     </span>
   )
 }
@@ -41,43 +41,43 @@ export default function Footer() {
       {/* Gold accent line clearly separates the footer from the CTA above */}
       <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(198,162,83,0.9), transparent)' }} />
 
-      {/* Brand banner — a calm, premium statement (details live in the columns).
+      {/* Brand banner — a calm, premium statement on a warm cream band.
           Faint gold/sage shapes drift with the pointer for quiet depth. */}
-      <div className="relative overflow-hidden border-b border-ivory/10">
+      <div className="relative overflow-hidden" style={{ background: 'var(--cream)' }}>
         <ParallaxFloating sensitivity={1.2} className="hidden md:block">
           <FloatingElement className="left-[8%] top-[18%]" depth={0.6}>
-            <span className="block h-9 w-9 rotate-45 rounded-md border border-gold/25" />
+            <span className="block h-9 w-9 rotate-45 rounded-md border border-gold/40" />
           </FloatingElement>
           <FloatingElement className="left-[18%] top-[60%]" depth={1.6}>
-            <span className="block h-2.5 w-2.5 rounded-full bg-gold/40" />
+            <span className="block h-2.5 w-2.5 rounded-full bg-gold/60" />
           </FloatingElement>
           <FloatingElement className="right-[10%] top-[22%]" depth={2.4}>
-            <span className="block h-14 w-14 rounded-full border border-sage/20" />
+            <span className="block h-14 w-14 rounded-full border border-sage/45" />
           </FloatingElement>
           <FloatingElement className="right-[16%] bottom-[20%]" depth={1}>
-            <span className="block h-6 w-6 rotate-45 bg-gold/12" />
+            <span className="block h-6 w-6 rotate-45 bg-gold/20" />
           </FloatingElement>
           <FloatingElement className="left-[46%] top-[10%]" depth={3}>
-            <span className="block h-2 w-2 rounded-full bg-gold-light/60" />
+            <span className="block h-2 w-2 rounded-full bg-gold-deep/60" />
           </FloatingElement>
           <FloatingElement className="right-[38%] bottom-[14%]" depth={2}>
-            <span className="block h-3.5 w-3.5 rounded-full border border-gold/30" />
+            <span className="block h-3.5 w-3.5 rounded-full border border-gold/50" />
           </FloatingElement>
           <FloatingElement className="left-[30%] bottom-[24%]" depth={0.9}>
-            <span className="block h-1.5 w-1.5 rounded-full bg-sage/50" />
+            <span className="block h-1.5 w-1.5 rounded-full bg-sage/70" />
           </FloatingElement>
         </ParallaxFloating>
 
         <div className="container-lux relative z-10 flex flex-col items-center gap-7 py-16 text-center">
-          <Monogram size="h-16 w-16" />
+          <Monogram size="h-16 w-16" borderClass="border-gold/50" textClass="text-gold-deep" />
           <div className="flex items-center gap-4">
             <span className="hidden h-px w-12 bg-gold/50 sm:block" />
-            <span className="font-sans text-[0.68rem] uppercase tracking-[0.34em] text-gold-light">
+            <span className="font-sans text-[0.68rem] uppercase tracking-[0.34em] text-gold-deep">
               Ashok Sanghavi Financial Advisory
             </span>
             <span className="hidden h-px w-12 bg-gold/50 sm:block" />
           </div>
-          <p className="max-w-2xl font-display text-[1.7rem] italic leading-[1.35] text-ivory sm:text-[2.1rem]">
+          <p className="max-w-2xl font-display text-[1.7rem] italic leading-[1.35] text-emerald sm:text-[2.1rem]">
             Helping you keep more of what you earn, protect what you have built, and pass it on with intention.
           </p>
         </div>
@@ -145,9 +145,9 @@ export default function Footer() {
                   key={s.label}
                   href={s.href}
                   aria-label={s.label}
-                  className="grid h-10 w-10 place-items-center rounded-full border border-ivory/15 text-sage-light transition-all duration-400 hover:-translate-y-0.5 hover:border-gold hover:bg-gold/10 hover:text-gold-light"
+                  className="grid h-10 w-10 place-items-center rounded-full border border-ivory/15 transition-all duration-400 hover:-translate-y-0.5 hover:border-gold hover:bg-gold/10"
                 >
-                  <Icon name={s.icon} size={18} />
+                  <Icon name={s.icon} size={22} />
                 </a>
               ))}
             </div>

@@ -119,9 +119,12 @@ export const outcomes = [
   { kicker: 'Estate tax', value: 0, display: '0', line: 'Planned down to zero for your heirs.' },
 ]
 
+// Only LinkedIn is a real, verified profile for the firm. The old site had no
+// other social links, so we keep just this one (with its authentic mark).
 export const social = [
-  { label: 'Facebook', href: '#', icon: 'facebook' },
-  { label: 'LinkedIn', href: '#', icon: 'linkedin' },
-  { label: 'Instagram', href: '#', icon: 'instagram' },
-  { label: 'YouTube', href: '#', icon: 'youtube' },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/ashok-hiralal-sanghavi-cfp-chfc-clu-8778976',
+    icon: 'linkedin',
+  },
 ]

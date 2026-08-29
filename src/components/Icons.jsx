@@ -38,6 +38,20 @@ const map = {
 }
 
 export default function Icon({ name, className = '', size = 24, strokeWidth = 1.6, ...rest }) {
+  // Authentic LinkedIn brand mark — a LinkedIn-blue rounded square with the
+  // white "in" wordmark. Self-coloured (ignores currentColor) so it reads as
+  // the real logo.
+  if (name === 'linkedin') {
+    return (
+      <svg className={className} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...rest}>
+        <circle cx="12" cy="12" r="12" fill="#0A66C2" />
+        <path
+          fill="#fff"
+          d="M8 10H5.6v8H8v-8zM6.8 6.1a1.4 1.4 0 100 2.8 1.4 1.4 0 000-2.8zM18.4 13.9c0-2.2-1.18-3.22-2.75-3.22-1.27 0-1.83.7-2.15 1.19V10H11.1c.03.68 0 8 0 8h2.4v-4.47c0-.21.02-.42.08-.57.17-.42.55-.85 1.19-.85.84 0 1.18.64 1.18 1.58V18h2.45v-4.1z"
+        />
+      </svg>
+    )
+  }
   if (brand[name]) {
     return (
       <svg
