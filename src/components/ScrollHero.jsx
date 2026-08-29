@@ -20,7 +20,6 @@ export default function ScrollHero() {
   const videoRef = useRef(null)
   const barRef = useRef(null)
   const barMobileRef = useRef(null)
-  const heroImgRef = useRef(null)
   const captionRefs = useRef([])
   const hintRef = useRef(null)
   const progress = useRef(0)
@@ -120,20 +119,15 @@ export default function ScrollHero() {
       progress.current += (target.current - progress.current) * 0.12
       const p = progress.current
 
-      // seek video (coalesced — never queue while decoder is seeking)
+      // seek video (coalesced — never queue while decoder is seeking). Skipped
+      // on touch: iOS can't reliably repaint scrubbed frames, so the video sits
+      // on its first frame (its native poster) while the captions animate.
       const wantTime = Math.max(0.001, Math.min(duration - 0.05, p * duration))
-      if (v.readyState >= 1 && !v.seeking && Math.abs(v.currentTime - wantTime) > 0.02) {
+      if (!isTouch && v.readyState >= 1 && !v.seeking && Math.abs(v.currentTime - wantTime) > 0.02) {
         try {
           v.currentTime = wantTime
         } catch {}
       }
-
-      // opening still: fully visible at the top, crossfades to video on scroll.
-      // On touch (iOS/Android) keep the still visible — those devices can't
-      // reliably repaint a scroll-scrubbed video, so the image + animated
-      // captions are the dependable premium hero there.
-      if (heroImgRef.current)
-        heroImgRef.current.style.opacity = isTouch ? '1' : String(1 - ss(0.004, 0.05, p))
 
       // progress rail fill (desktop vertical + mobile horizontal)
       const clamped = Math.max(0.001, Math.min(1, p))
@@ -239,16 +233,6 @@ export default function ScrollHero() {
         >
           <source src={MP4} type="video/mp4" />
         </video>
-
-        {/* Opening still — the crisp HD image shows when the site loads and at
-            the very top, then crossfades to the scrubbing video as you scroll */}
-        <img
-          ref={heroImgRef}
-          src={POSTER}
-          alt="Ashok Sanghavi Financial Advisory building"
-          className="absolute inset-0 h-full w-full object-cover"
-          style={{ willChange: 'opacity' }}
-        />
 
         {/* Premium light overlays — never a heavy dark scrim */}
         <div
