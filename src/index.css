@@ -277,6 +277,27 @@
   to { transform: translateX(calc(-50% - var(--gap, 1.25rem) / 2)); }
 }
 
+/* Falling leaves over the hero poster. Each leaf varies via CSS vars set
+   inline: --dx drift, --spin rotation, --o peak opacity. */
+@keyframes leafFall {
+  0%   { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
+  8%   { opacity: var(--o, 0.85); }
+  50%  { transform: translate3d(var(--dx, 40px), 52vh, 0) rotate(calc(var(--spin, 360deg) * 0.55)); }
+  92%  { opacity: var(--o, 0.85); }
+  100% { transform: translate3d(calc(var(--dx, 40px) * -0.7), 114vh, 0) rotate(var(--spin, 360deg)); opacity: 0; }
+}
+.leaf {
+  position: absolute;
+  top: 0;
+  will-change: transform, opacity;
+  animation-name: leafFall;
+  animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  animation-iteration-count: infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .leaf { animation: none; opacity: 0; }
+}
+
 /* Global film grain overlay */
 .grain-overlay {
   position: fixed;

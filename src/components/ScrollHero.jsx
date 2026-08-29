@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -7,6 +7,61 @@ import CountUp from './CountUp'
 
 // Versioned filename busts the year-long immutable cache when the video changes.
 const MP4 = '/hero/master-v4.mp4'
+const POSTER = '/hero/poster.jpg'
+
+// Autumn falling-leaves that drift over the opening poster. Each leaf's colour,
+// drift, spin and timing is randomised once on mount.
+const LEAF_COLORS = ['#C6A253', '#B5892F', '#A6431F', '#C77B3B', '#9C6B2A', '#7E3A1F']
+function Leaf({ color }) {
+  return (
+    <svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" aria-hidden="true">
+      <path
+        d="M12 2C8.5 5.5 6.4 11 8 16.6c.9 3.1 2.6 4.4 4 5.4 1.4-1 3.1-2.3 4-5.4C17.6 11 15.5 5.5 12 2z"
+        fill={color}
+      />
+      <path d="M12 5.4V20.4" stroke="rgba(0,0,0,0.2)" strokeWidth="0.7" />
+    </svg>
+  )
+}
+function FallingLeaves({ count = 16 }) {
+  const leaves = useMemo(
+    () =>
+      Array.from({ length: count }, (_, i) => ({
+        id: i,
+        left: Math.random() * 100,
+        size: 13 + Math.random() * 20,
+        color: LEAF_COLORS[Math.floor(Math.random() * LEAF_COLORS.length)],
+        dx: Math.random() * 130 - 30,
+        spin: (Math.random() > 0.5 ? 1 : -1) * (220 + Math.random() * 360),
+        dur: 7 + Math.random() * 8,
+        delay: -Math.random() * 14,
+        o: 0.5 + Math.random() * 0.42,
+      })),
+    [count]
+  )
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {leaves.map((l) => (
+        <span
+          key={l.id}
+          className="leaf"
+          style={{
+            left: `${l.left}%`,
+            width: l.size,
+            height: l.size,
+            '--dx': `${l.dx}px`,
+            '--spin': `${l.spin}deg`,
+            '--o': l.o,
+            animationDuration: `${l.dur}s`,
+            animationDelay: `${l.delay}s`,
+          }}
+        >
+          <Leaf color={l.color} />
+        </span>
+      ))}
+    </div>
+  )
+}
 
 // smoothstep helper
 const ss = (a, b, x) => {
@@ -20,6 +75,8 @@ export default function ScrollHero() {
   const videoRef = useRef(null)
   const barRef = useRef(null)
   const barMobileRef = useRef(null)
+  const heroImgRef = useRef(null)
+  const hasVideoRef = useRef(false)
   const captionRefs = useRef([])
   const hintRef = useRef(null)
   const progress = useRef(0)
@@ -147,6 +204,15 @@ export default function ScrollHero() {
         }
       }
 
+      // Opening poster (+ falling leaves): held fully visible at the top, then
+      // fades out as you scroll to reveal the video. Held up only until the
+      // video has decoded its first frame (a one-time flag — readyState itself
+      // dips during every scrub-seek and would flicker the poster back).
+      if (heroImgRef.current) {
+        if (!hasVideoRef.current && v.readyState >= 2) hasVideoRef.current = true
+        heroImgRef.current.style.opacity = hasVideoRef.current ? String(1 - ss(0.004, 0.06, p)) : '1'
+      }
+
       // progress rail fill (desktop vertical + mobile horizontal)
       const clamped = Math.max(0.001, Math.min(1, p))
       if (barRef.current) barRef.current.style.transform = `scaleY(${clamped})`
@@ -249,6 +315,18 @@ export default function ScrollHero() {
           className="absolute inset-0 h-full w-full object-cover"
           style={{ filter: 'contrast(1.07) saturate(1.09) brightness(1.02)' }}
         />{/* src is set programmatically (blob on desktop, streamed on touch) */}
+
+        {/* Opening poster with drifting autumn leaves — the crisp still shows at
+            the very top and crossfades to the scrubbing video as you scroll */}
+        <div ref={heroImgRef} className="absolute inset-0" style={{ willChange: 'opacity' }}>
+          <img
+            src={POSTER}
+            alt="Ashok Sanghavi Financial Advisory building"
+            className="absolute inset-0 h-full w-full object-cover"
+            onLoad={() => setReady(true)}
+          />
+          <FallingLeaves count={16} />
+        </div>
 
         {/* Premium light overlays — never a heavy dark scrim */}
         <div
