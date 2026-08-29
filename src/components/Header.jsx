@@ -158,7 +158,7 @@ export default function Header() {
                   <NavLink
                     to={item.to}
                     className={({ isActive }) =>
-                      `nav-item font-sans text-[0.92rem] tracking-wide inline-flex items-center gap-1.5 ${
+                      `nav-item font-sans text-[0.86rem] font-medium tracking-[0.02em] inline-flex items-center gap-1.5 ${
                         isActive
                           ? light ? 'text-gold-light' : 'text-emerald'
                           : light ? 'text-ivory/85 hover:text-ivory' : 'text-ink-soft hover:text-emerald'
@@ -233,7 +233,7 @@ export default function Header() {
                   to={item.to}
                   end={item.to === '/'}
                   className={({ isActive }) =>
-                    `nav-item font-sans text-[0.92rem] tracking-wide ${
+                    `nav-item font-sans text-[0.86rem] font-medium tracking-[0.02em] ${
                       isActive
                         ? light ? 'text-gold-light' : 'text-emerald'
                         : light ? 'text-ivory/85 hover:text-ivory' : 'text-ink-soft hover:text-emerald'
@@ -246,36 +246,46 @@ export default function Header() {
             )}
           </nav>
 
-          <div className="hidden lg:block">
-            <Link to="/contact" className="btn-primary">
+          <div className="hidden items-center gap-6 lg:flex">
+            <span
+              className="h-7 w-px"
+              style={{ background: light ? 'rgba(217,190,126,0.4)' : 'rgba(198,162,83,0.35)' }}
+            />
+            <Link to="/contact" className="btn-primary text-[0.9rem]">
               Book a consultation
             </Link>
           </div>
 
           {/* Mobile toggle */}
           <button
-            className="lg:hidden grid place-items-center rounded-full border transition-colors duration-500"
-            style={{
-              width: 46,
-              height: 46,
-              borderColor: light ? 'rgba(251,248,241,0.35)' : 'rgba(20,86,59,0.2)',
-              color: light ? '#FBF8F1' : 'var(--emerald)',
-            }}
+            className={`grid h-12 w-12 place-items-center rounded-full border transition-all duration-500 lg:hidden ${
+              light
+                ? 'border-gold-light/50 text-ivory hover:bg-ivory/10'
+                : 'border-gold/45 text-emerald hover:border-gold hover:bg-gold/10'
+            }`}
             onClick={() => setOpen((v) => !v)}
-            aria-label="Open menu"
+            aria-label={open ? 'Close menu' : 'Open menu'}
           >
-            <span className="relative block w-5 h-3">
+            <span className="relative block h-[14px] w-[22px]">
               <span
-                className="absolute left-0 h-[1.5px] w-5 bg-current transition-all duration-300"
-                style={{ top: open ? 5 : 0, transform: open ? 'rotate(45deg)' : 'none' }}
+                className="absolute left-0 top-[1px] h-[1.6px] w-full rounded-full bg-current transition-all duration-[450ms]"
+                style={{
+                  transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
+                  transformOrigin: 'center',
+                  transform: open ? 'translateY(6px) rotate(45deg)' : 'none',
+                }}
               />
               <span
-                className="absolute left-0 top-[5px] h-[1.5px] w-5 bg-current transition-all duration-300"
-                style={{ opacity: open ? 0 : 1 }}
+                className="absolute left-0 top-1/2 h-[1.6px] w-full -translate-y-1/2 rounded-full bg-current transition-all duration-300"
+                style={{ opacity: open ? 0 : 1, transform: open ? 'translateX(8px)' : 'translateX(0)' }}
               />
               <span
-                className="absolute left-0 h-[1.5px] w-5 bg-current transition-all duration-300"
-                style={{ top: open ? 5 : 10, transform: open ? 'rotate(-45deg)' : 'none' }}
+                className="absolute bottom-[1px] left-0 h-[1.6px] w-full rounded-full bg-current transition-all duration-[450ms]"
+                style={{
+                  transitionTimingFunction: 'cubic-bezier(0.22,1,0.36,1)',
+                  transformOrigin: 'center',
+                  transform: open ? 'translateY(-6px) rotate(-45deg)' : 'none',
+                }}
               />
             </span>
           </button>
