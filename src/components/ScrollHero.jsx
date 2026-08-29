@@ -247,6 +247,7 @@ export default function ScrollHero() {
           preload="auto"
           disablePictureInPicture
           className="absolute inset-0 h-full w-full object-cover"
+          style={{ filter: 'contrast(1.07) saturate(1.09) brightness(1.02)' }}
         />{/* src is set programmatically (blob on desktop, streamed on touch) */}
 
         {/* Premium light overlays — never a heavy dark scrim */}
@@ -271,12 +272,14 @@ export default function ScrollHero() {
           className="pointer-events-none absolute inset-0"
           style={{ background: 'radial-gradient(120% 90% at 50% 45%, transparent 55%, rgba(14,58,40,0.34) 100%)' }}
         />
-        {/* Faint grain */}
+        {/* Film grain — a fine high-frequency texture that masks the softness /
+            compression of the video and lends a premium cinematic finish */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-overlay"
+          className="pointer-events-none absolute inset-0 opacity-[0.13] mix-blend-overlay"
           style={{
             backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+            backgroundSize: '220px 220px',
           }}
         />
 
