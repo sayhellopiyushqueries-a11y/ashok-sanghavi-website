@@ -67,7 +67,14 @@ export const services = [
 
 export const nav = [
   { label: 'Home', to: '/' },
-  { label: 'About', to: '/about' },
+  {
+    label: 'About',
+    to: '/about',
+    children: [
+      { label: 'About Ashok', to: '/about' },
+      { label: 'Core Beliefs', to: '/core-beliefs' },
+    ],
+  },
   { label: 'Services', to: '/services', children: services.map((s) => ({ label: s.title, to: `/services/${s.slug}` })) },
   {
     label: 'Watch and Learn',
@@ -77,6 +84,7 @@ export const nav = [
       { label: 'Standalone Financial Concepts', to: '/watch-and-learn/standalone-financial-concepts' },
     ],
   },
+  { label: 'Calculators', to: '/calculators' },
   { label: 'Blog', to: '/blog' },
   { label: 'Contact', to: '/contact' },
 ]

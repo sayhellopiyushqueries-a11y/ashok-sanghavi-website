@@ -42,10 +42,10 @@ export default function Intro() {
                 </div>
               </div>
               {/* Credential plate */}
-              <div className="absolute -bottom-5 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-3 shadow-soft">
-                <span className="font-display text-[1.05rem] leading-none text-emerald">Ashok Sanghavi</span>
-                <span className="h-3.5 w-px bg-gold/50" />
-                <span className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-ink-muted">
+              <div className="absolute -bottom-7 left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap rounded-full border border-gold/40 bg-ivory px-6 py-4 shadow-soft">
+                <span className="font-display text-[1.05rem] leading-tight text-emerald">Ashok Sanghavi</span>
+                <span className="h-4 w-px shrink-0 bg-gold/50" />
+                <span className="font-sans text-[0.66rem] font-semibold uppercase leading-tight tracking-[0.16em] text-ink-muted">
                   CFP · ChFC · CLU
                 </span>
               </div>

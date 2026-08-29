@@ -157,38 +157,55 @@ export const coreBeliefs = [
   },
 ]
 
-// -------- Watch and learn concepts --------
+// -------- Watch and learn concepts (each links directly to its YouTube video) --------
+const yt = (id) => `https://www.youtube.com/watch?v=${id}`
 export const concepts = [
-  { group: 'important', icon: 'percent', title: 'Could you lower your income taxes by 20 to 50 percent?', teaser: 'Proactive strategies that meaningfully reduce what you owe.' },
-  { group: 'important', icon: 'piggy', title: 'Can you fund your retirement plan up to 400,000 dollars?', teaser: 'How high contribution plans accelerate retirement savings.' },
-  { group: 'important', icon: 'chart', title: 'Is funding a defined benefit plan a mistake?', teaser: 'When a defined benefit plan helps, and when it does not.' },
-  { group: 'important', icon: 'shield', title: 'Can you legally exclude employees from a defined benefit plan?', teaser: 'Understanding who a defined benefit plan must cover.' },
-  { group: 'important', icon: 'arrowUpRight', title: 'Can you convert a defined benefit plan to a Roth IRA with no out of pocket taxes?', teaser: 'A strategy to move funds into tax free growth.' },
-  { group: 'important', icon: 'sun', title: 'Can you create tax free retirement income?', teaser: 'Structuring income so more of it reaches you untaxed.' },
-  { group: 'important', icon: 'coins', title: 'How can you avoid paying capital gains taxes up front?', teaser: 'Strategies to defer or reduce capital gains.' },
-  { group: 'important', icon: 'home', title: 'Can you create tax free rental or business income?', teaser: 'Structuring property and business income efficiently.' },
-  { group: 'standalone', icon: 'people', title: 'Can you hire your young children in your business, legally?', teaser: 'How employing your children the right way can reduce tax.' },
-  { group: 'standalone', icon: 'graduation', title: 'Can you let the IRS help pay for your kids college?', teaser: 'Using tax strategy to ease the cost of education.' },
-  { group: 'standalone', icon: 'building', title: 'LLC, S Corp or C Corp, which is right for you?', teaser: 'How your entity choice shapes taxes and protection.' },
-  { group: 'standalone', icon: 'lock', title: 'Is your LLC really protecting you?', teaser: 'Whether your structure actually shields your assets.' },
-  { group: 'standalone', icon: 'receipt', title: 'How should you plan around W2 income?', teaser: 'Tax planning strategies for salaried earners.' },
-  { group: 'standalone', icon: 'scale', title: 'Is being mortgage free really better?', teaser: 'Weighing a paid off home against other uses of capital.' },
+  // Important Financial Concepts
+  { group: 'important', icon: 'building', title: 'Your Bank', teaser: 'How the way you use your bank quietly shapes your wealth.', url: yt('Qks8JWSDHfc') },
+  { group: 'important', icon: 'piggy', title: 'Private Reserve Strategy', teaser: 'Building a pool of capital that stays in your control.', url: yt('p7Jw1l8YzTc') },
+  { group: 'important', icon: 'clock', title: 'A Ten Minute Lesson', teaser: 'The core idea, explained in ten simple minutes.', url: yt('9BHdLi3vB9Y') },
+  { group: 'important', icon: 'graduation', title: 'College Funding', teaser: 'Funding education without derailing your own future.', url: yt('0ZirmmR9H8M') },
+  { group: 'important', icon: 'home', title: 'Mortgages', teaser: 'Making your mortgage work in your favour.', url: yt('F_bip3fdhv4') },
+  { group: 'important', icon: 'chart', title: 'The Personal Economic Model', teaser: 'See how money really flows through your life.', url: yt('xVVIo61Y0_M') },
+  { group: 'important', icon: 'coins', title: 'The Private Reserve, In Depth', teaser: 'A closer look at keeping your capital available.', url: yt('L8Atvhs2Kak') },
+  { group: 'important', icon: 'shield', title: 'Qualified Plans', teaser: 'What qualified plans do, and what they can cost.', url: yt('OmtkevIsVVU') },
+  { group: 'important', icon: 'sun', title: 'Retirement, Are You Ready?', teaser: 'An honest look at whether you are on track.', url: yt('AURflXmV6nk') },
+
+  // Standalone Financial Concepts
+  { group: 'standalone', icon: 'gem', title: 'The Money Matrix', teaser: 'The forces that quietly shape every dollar you have.', url: yt('Pbh0ZbwBe3M') },
+  { group: 'standalone', icon: 'coins', title: 'Transfers of Wealth', teaser: 'The wealth you lose without ever realising it.', url: yt('3OQCfY3Iylg') },
+  { group: 'standalone', icon: 'shield', title: 'Qualified Plans', teaser: 'A clear look at qualified retirement plans.', url: yt('HIbbLEgT98U') },
+  { group: 'standalone', icon: 'book', title: 'The Business of Learning', teaser: 'Why financial understanding pays for itself.', url: yt('0NkrGv0X7b8') },
+  { group: 'standalone', icon: 'receipt', title: 'Taxes', teaser: 'Seeing tax as something you can plan for.', url: yt('YtCT4Y3lx44') },
+  { group: 'standalone', icon: 'compass', title: 'Misguided Wisdom', teaser: 'Common money advice that quietly costs you.', url: yt('1yCrqpRua-g') },
+  { group: 'standalone', icon: 'heart', title: 'The Charitable Legacy', teaser: 'Giving with intention, and with impact.', url: yt('wvB8Y-L9sMg') },
+  { group: 'standalone', icon: 'target', title: 'Club vs. Swing', teaser: 'Focusing on what actually moves the result.', url: yt('99MDOKJBZZ8') },
+  { group: 'standalone', icon: 'scale', title: 'The Thought Process', teaser: 'How we think through a financial decision.', url: yt('5eKo-wpEyvE') },
+  { group: 'standalone', icon: 'umbrella', title: 'Insurance', teaser: 'Protection as a foundation, not an afterthought.', url: yt('IOieghF2qxc') },
+  { group: 'standalone', icon: 'award', title: 'Your Circle of Wealth', teaser: 'Keeping your money working within your world.', url: yt('Avd5FvUM2Qk') },
+  { group: 'standalone', icon: 'percent', title: 'Opportunity Cost', teaser: 'The hidden cost of every financial choice.', url: yt('Nt2EIzNPLFg') },
+  { group: 'standalone', icon: 'people', title: 'Spender, Saver, Wealth Creator', teaser: 'Which one are you, and which one pays off.', url: yt('yP3IWQGx2O4') },
+  { group: 'standalone', icon: 'lock', title: 'Avoiding the Losses', teaser: 'Why avoiding losses beats chasing gains.', url: yt('iN6LbAF2foE') },
+  { group: 'standalone', icon: 'growth', title: 'Recoup vs. Recover', teaser: 'The real math of bouncing back from a loss.', url: yt('LQWUqxHBvKM') },
+  { group: 'standalone', icon: 'handshake', title: 'Pay Cash or Finance', teaser: 'When to pay cash, and when not to.', url: yt('_4cSJZsDmeQ') },
+  { group: 'standalone', icon: 'clock', title: 'Financial Warning Signs', teaser: 'The signals worth catching early.', url: yt('2u-_68Hhdqw') },
+  { group: 'standalone', icon: 'legacy', title: 'The Zero Financial Line', teaser: 'Finding the line where money truly works.', url: yt('Aj1tA-Np3CE') },
+  { group: 'standalone', icon: 'star', title: 'Human Life Value', teaser: 'What your earning power is really worth.', url: yt('QPEiOvO6ZAs') },
+  { group: 'standalone', icon: 'piggy', title: 'Qualified Plan Contributions', teaser: 'Getting the most from what you put in.', url: yt('HGKRehTLDWQ') },
 ]
 
 export const watchLearnSections = [
   {
     slug: 'important-financial-concepts',
     title: 'Important Financial Concepts',
-    intro: 'The core ideas behind our tax and retirement planning, explained simply.',
+    intro: 'Short videos on the foundations, from your bank and mortgages to qualified plans and retirement readiness.',
     group: 'important',
-    resourceUrl: 'https://www.ashoksanghavi.com/resource/Watch_Learn/Important_Financial_Concepts.aspx',
   },
   {
     slug: 'standalone-financial-concepts',
     title: 'Standalone Financial Concepts',
-    intro: 'Focused answers to the questions clients ask us most.',
+    intro: 'A deeper library of ideas, from the money matrix and opportunity cost to human life value and beyond.',
     group: 'standalone',
-    resourceUrl: 'https://www.ashoksanghavi.com/resource/Watch_Learn/Standalone_Financial_Concepts.aspx',
   },
 ]
 
