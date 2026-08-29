@@ -57,6 +57,7 @@ export default function Header() {
   const [pastHero, setPastHero] = useState(false)
   const [open, setOpen] = useState(false)
   const [openMenu, setOpenMenu] = useState(null)
+  const [mobileSub, setMobileSub] = useState(null)
   const location = useLocation()
   const isHome = location.pathname === '/'
 
@@ -85,6 +86,7 @@ export default function Header() {
   useEffect(() => {
     setOpen(false)
     setOpenMenu(null)
+    setMobileSub(null)
   }, [location.pathname])
 
   useEffect(() => {
@@ -292,68 +294,144 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Mobile full-screen slide-in menu */}
+      {/* Mobile slide-in menu — premium drawer with collapsible sections */}
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 lg:hidden"
-          >
+          <div className="fixed inset-0 z-40 lg:hidden">
+            {/* Scrim */}
+            <motion.button
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+              onClick={() => setOpen(false)}
+              aria-label="Close menu"
+              className="absolute inset-0 h-full w-full cursor-default"
+              style={{ background: 'rgba(10,42,27,0.42)', backdropFilter: 'blur(3px)' }}
+            />
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute inset-0 flex flex-col overflow-y-auto bg-ivory px-7 pt-28 pb-12"
+              transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute inset-y-0 right-0 flex w-[86%] max-w-sm flex-col overflow-y-auto pt-28 pb-10"
+              style={{
+                background: 'linear-gradient(180deg, #FBF8F1 0%, #F5F0E6 100%)',
+                boxShadow: '-30px 0 80px -40px rgba(14,58,40,0.55)',
+              }}
             >
-              <nav className="flex flex-col gap-1">
-                {nav.map((item, i) => (
-                  <motion.div
-                    key={item.to}
-                    initial={{ opacity: 0, y: 16 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.12 + i * 0.05, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Link
-                      to={item.to}
-                      className="block border-b border-gold/15 py-4 font-display text-2xl text-emerald"
+              {/* gold hairline on the drawer's leading edge */}
+              <span className="pointer-events-none absolute inset-y-0 left-0 w-px" style={{ background: 'linear-gradient(180deg, transparent, rgba(198,162,83,0.7), transparent)' }} />
+
+              <motion.p
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.5 }}
+                className="mb-2 flex items-center gap-2 px-7 font-sans text-[0.62rem] uppercase tracking-[0.34em] text-gold-deep"
+              >
+                <span className="text-gold">&#9670;</span> Menu
+              </motion.p>
+
+              <nav className="flex flex-col px-7">
+                {nav.map((item, i) => {
+                  const isSubOpen = mobileSub === item.to
+                  return (
+                    <motion.div
+                      key={item.to}
+                      initial={{ opacity: 0, x: 24 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.14 + i * 0.055, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                      className="border-b border-gold/15"
                     >
-                      {item.label}
-                    </Link>
-                    {item.children && (
-                      <div className="grid grid-cols-1 gap-0.5 pb-3 pt-2">
-                        {item.children.map((c) => (
-                          <Link
-                            key={c.to}
-                            to={c.to}
-                            className="py-1.5 pl-1 font-sans text-[0.92rem] text-ink-soft"
+                      {item.children ? (
+                        <>
+                          <button
+                            onClick={() => setMobileSub(isSubOpen ? null : item.to)}
+                            aria-expanded={isSubOpen}
+                            className="flex w-full items-center justify-between py-4 text-left"
                           >
-                            {c.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </motion.div>
-                ))}
+                            <span className="flex items-baseline gap-3">
+                              <span className="font-sans text-[0.7rem] tabular-nums text-gold-deep/70">0{i + 1}</span>
+                              <span className="font-display text-[1.7rem] leading-none text-emerald">{item.label}</span>
+                            </span>
+                            <span
+                              className="grid h-8 w-8 place-items-center rounded-full border border-gold/30 text-gold transition-all duration-500"
+                              style={{
+                                transform: isSubOpen ? 'rotate(180deg)' : 'none',
+                                background: isSubOpen ? 'rgba(198,162,83,0.12)' : 'transparent',
+                              }}
+                            >
+                              <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                                <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                            </span>
+                          </button>
+                          <AnimatePresence initial={false}>
+                            {isSubOpen && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+                                className="overflow-hidden"
+                              >
+                                <div className="flex flex-col gap-0.5 pb-3 pl-8">
+                                  <Link
+                                    to={item.to}
+                                    className="flex items-center gap-2 py-2 font-sans text-[0.82rem] font-semibold uppercase tracking-[0.16em] text-gold-deep"
+                                  >
+                                    All {item.label}
+                                    <Icon name="arrow" size={14} className="text-gold" />
+                                  </Link>
+                                  {item.children.map((c) => (
+                                    <Link
+                                      key={c.to}
+                                      to={c.to}
+                                      className="group flex items-center gap-3 py-2 font-sans text-[0.98rem] text-ink-soft transition-colors hover:text-emerald"
+                                    >
+                                      <span className="h-1 w-1 rounded-full bg-gold/50 transition-all duration-300 group-hover:w-4 group-hover:bg-gold" />
+                                      {c.label}
+                                    </Link>
+                                  ))}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </>
+                      ) : (
+                        <Link to={item.to} className="flex items-baseline gap-3 py-4">
+                          <span className="font-sans text-[0.7rem] tabular-nums text-gold-deep/70">0{i + 1}</span>
+                          <span className="font-display text-[1.7rem] leading-none text-emerald">{item.label}</span>
+                        </Link>
+                      )}
+                    </motion.div>
+                  )
+                })}
               </nav>
+
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.5 }}
-                className="mt-8"
+                transition={{ delay: 0.42, duration: 0.5 }}
+                className="mt-9 px-7"
               >
-                <Link to="/contact" className="btn-primary w-full">
+                <Link to="/contact" className="btn-primary w-full justify-center">
                   Book a consultation
                 </Link>
-                <a href={firm.phoneHref} className="mt-4 flex items-center gap-2 font-sans text-ink-soft">
-                  <Icon name="phone" size={18} className="text-gold" /> {firm.phone}
-                </a>
+                <div className="mt-6 flex flex-col gap-3">
+                  <a href={firm.phoneHref} className="flex items-center gap-3 font-sans text-[0.92rem] text-ink-soft transition-colors hover:text-emerald">
+                    <Icon name="phone" size={17} className="text-gold" /> {firm.phone}
+                  </a>
+                  <a href={`mailto:${firm.email}`} className="flex items-center gap-3 font-sans text-[0.92rem] text-ink-soft transition-colors hover:text-emerald">
+                    <Icon name="mail" size={17} className="text-gold" /> {firm.email}
+                  </a>
+                </div>
+                <p className="mt-7 font-sans text-[0.7rem] uppercase tracking-[0.24em] text-ink-muted">
+                  Fiduciary advisory &middot; Elkhart, Indiana
+                </p>
               </motion.div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </>
