@@ -270,7 +270,7 @@ export default function ScrollHero() {
   // ---- Reduced motion / no-video static hero ----
   if (reduce) {
     return (
-      <section className="relative h-svh w-full overflow-hidden">
+      <section className="relative h-dvh w-full overflow-hidden">
         <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, #17603F 0%, #124A32 55%, #0E3A28 100%)' }} />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(14,58,40,0.35), rgba(14,58,40,0.12) 40%, rgba(14,58,40,0.55))' }} />
         <div className="relative z-10 flex h-full items-center">
@@ -290,7 +290,7 @@ export default function ScrollHero() {
 
   return (
     <section id="scroll-hero" ref={wrapRef} style={{ height: `${scrollVh}vh` }} className="relative">
-      <div ref={stageRef} className="sticky top-0 h-svh w-full overflow-hidden bg-emerald-deep">
+      <div ref={stageRef} className="sticky top-0 h-dvh w-full overflow-hidden bg-emerald-deep">
         {/* Video */}
         <video
           ref={videoRef}

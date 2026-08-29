@@ -294,9 +294,6 @@
   animation-timing-function: cubic-bezier(0.45, 0.05, 0.55, 0.95);
   animation-iteration-count: infinite;
 }
-@media (prefers-reduced-motion: reduce) {
-  .leaf { animation: none; opacity: 0; }
-}
 
 /* Global film grain overlay */
 .grain-overlay {
