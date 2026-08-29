@@ -5,9 +5,15 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
-// Versioned filename busts the year-long immutable cache when the video changes.
-const MP4 = '/hero/master-v4.mp4'
 const POSTER = '/hero/poster-v2.jpg'
+
+// The desktop hero is a scroll-scrubbed IMAGE SEQUENCE drawn to a <canvas>,
+// not a seeked <video>. Seeking a video decodes a frame per scroll step
+// (~30ms each) which caps the scrub near 25fps and stutters; preloaded images
+// drawn to canvas are instant, so the scrub runs at a true 60fps with no
+// decode stalls or reload glitches.
+const FRAME_COUNT = 144
+const framePath = (i) => `/hero/seq/f${String(i).padStart(3, '0')}.webp`
 
 // Autumn falling-leaves that drift over the opening poster. Each leaf's colour,
 // drift, spin and timing is randomised once on mount.
@@ -72,11 +78,13 @@ const ss = (a, b, x) => {
 export default function ScrollHero() {
   const wrapRef = useRef(null)
   const stageRef = useRef(null)
-  const videoRef = useRef(null)
+  const canvasRef = useRef(null)
+  const framesRef = useRef([])
+  const kickRef = useRef(null)
   const barRef = useRef(null)
   const barMobileRef = useRef(null)
   const heroImgRef = useRef(null)
-  const hasVideoRef = useRef(false)
+  const drawnRef = useRef(false)
   const captionRefs = useRef([])
   const hintRef = useRef(null)
   const progress = useRef(0)
@@ -84,53 +92,18 @@ export default function ScrollHero() {
   const [ready, setReady] = useState(false)
   const [reduce, setReduce] = useState(false)
 
-  // Video setup. Two very different strategies:
-  //   • Desktop (fine pointer): stream via native HTTP range requests and
-  //     scrub by seeking on scroll. Static hosts like Vercel serve byte ranges,
-  //     so seeking works instantly. A blob fallback covers hosts that refuse
-  //     ranges (video would otherwise stay stuck near frame 0).
-  //   • Touch (iOS/Android): seeking-on-scroll cannot repaint reliably, so we
-  //     let the clip AUTOPLAY and LOOP as an ambient, muted, inline background —
-  //     which plays on every mobile browser. Captions still animate on scroll.
+  // Preload the frame sequence (desktop only — phones show just the poster).
+  // As each frame arrives we nudge the render loop so the canvas fills in.
   useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
     const isTouch = window.matchMedia('(pointer: coarse)').matches
-
-    if (isTouch) {
-      // Phone/tablet: no video at all. The poster with drifting leaves IS the
-      // hero here; captions still animate on scroll. Video playback and
-      // scroll-scrubbing are desktop-only.
-      return
-    }
-
-    // Desktop: the clip is scrubbed by seeking on scroll. On a CDN, each seek to
-    // an un-buffered spot triggers a byte-range fetch (network latency) → janky
-    // scrub, even though it's smooth on localhost where the file is local. Fix:
-    // download the whole (light) clip ONCE as a blob and scrub it in-memory, so
-    // every seek is instant. Single download — no separate streaming pass — so
-    // it's not heavy. The shimmer shows until the blob is ready.
-    let objectUrl
-    let cancelled = false
-    fetch(MP4)
-      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error('http'))))
-      .then((b) => {
-        if (cancelled) return
-        objectUrl = URL.createObjectURL(b)
-        v.src = objectUrl
-        v.load()
-      })
-      .catch(() => {
-        // Network/blob failure — fall back to plain streaming.
-        if (!cancelled) {
-          v.src = MP4
-          v.load()
-        }
-      })
-
-    return () => {
-      cancelled = true
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
+    if (isTouch) return
+    const imgs = framesRef.current
+    for (let i = 0; i < FRAME_COUNT; i++) {
+      const img = new Image()
+      img.decoding = 'async'
+      img.onload = () => kickRef.current && kickRef.current()
+      img.src = framePath(i + 1)
+      imgs[i] = img
     }
   }, [])
 
@@ -138,21 +111,50 @@ export default function ScrollHero() {
   useEffect(() => {
     if (reduce) return
     const isTouch = window.matchMedia('(pointer: coarse)').matches
-    const v = videoRef.current
     const wrap = wrapRef.current
-    if (!v || !wrap) return
+    if (!wrap) return
 
-    let duration = 48
-    const onMeta = () => {
-      duration = v.duration || 48
-      if (!isTouch) {
-        try {
-          v.currentTime = 0.01
-        } catch {}
-      }
-      setReady(true)
+    // Canvas plumbing (desktop). Keep the backing store sized to its box, and
+    // draw the frame nearest the current scroll position with a cover fit.
+    const canvas = canvasRef.current
+    const ctx = canvas ? canvas.getContext('2d', { alpha: false }) : null
+    const sizeCanvas = () => {
+      if (!canvas) return
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      const r = canvas.getBoundingClientRect()
+      canvas.width = Math.max(1, Math.round(r.width * dpr))
+      canvas.height = Math.max(1, Math.round(r.height * dpr))
     }
-    v.addEventListener('loadedmetadata', onMeta)
+    const drawCover = (img) => {
+      if (!ctx || !img || !img.complete || !img.naturalWidth) return false
+      const cw = canvas.width
+      const ch = canvas.height
+      const ir = img.naturalWidth / img.naturalHeight
+      const cr = cw / ch
+      let dw, dh, dx, dy
+      if (ir > cr) { dh = ch; dw = ch * ir; dx = (cw - dw) / 2; dy = 0 }
+      else { dw = cw; dh = cw / ir; dx = 0; dy = (ch - dh) / 2 }
+      ctx.drawImage(img, dx, dy, dw, dh)
+      return true
+    }
+    const drawAt = (p) => {
+      if (isTouch || !ctx) return
+      const imgs = framesRef.current
+      const idx = Math.min(FRAME_COUNT - 1, Math.max(0, Math.round(p * (FRAME_COUNT - 1))))
+      let img = imgs[idx]
+      if (!img || !img.complete || !img.naturalWidth) {
+        for (let d = 1; d < FRAME_COUNT; d++) {
+          const a = imgs[idx - d]
+          const b = imgs[idx + d]
+          if (a && a.complete && a.naturalWidth) { img = a; break }
+          if (b && b.complete && b.naturalWidth) { img = b; break }
+        }
+      }
+      if (drawCover(img)) drawnRef.current = true
+    }
+    if (!isTouch) sizeCanvas()
+    const ro = canvas && !isTouch ? new ResizeObserver(() => { sizeCanvas(); drawAt(progress.current) }) : null
+    if (ro) ro.observe(canvas)
 
     const st = ScrollTrigger.create({
       trigger: wrap,
@@ -173,30 +175,16 @@ export default function ScrollHero() {
       progress.current += (target.current - progress.current) * 0.12
       const p = progress.current
 
-      // Desktop only: scrub the video by seeking (coalesced — never queue while
-      // the decoder is mid-seek). On touch the clip autoplays/loops instead, so
-      // we leave playback alone.
-      if (!isTouch) {
-        const wantTime = Math.max(0.001, Math.min(duration - 0.05, p * duration))
-        if (v.readyState >= 1 && !v.seeking && Math.abs(v.currentTime - wantTime) > 0.02) {
-          try {
-            v.currentTime = wantTime
-          } catch {}
-        }
-      }
+      // Desktop: draw the sequence frame for this scroll position — instant, no
+      // decode. (Touch draws nothing; the poster is the hero there.)
+      drawAt(p)
 
       // Opening poster (+ falling leaves): held fully visible at the top, then
-      // fades out as you scroll to reveal the video. Held up only until the
-      // video has decoded its first frame (a one-time flag — readyState itself
-      // dips during every scrub-seek and would flicker the poster back).
+      // fades out as you scroll to reveal the canvas. On phone it stays put; on
+      // desktop it holds until the first frame has actually been drawn.
       if (heroImgRef.current) {
-        if (isTouch) {
-          // Phone: the poster + leaves stays put — there is no video to reveal.
-          heroImgRef.current.style.opacity = '1'
-        } else {
-          if (!hasVideoRef.current && v.readyState >= 2) hasVideoRef.current = true
-          heroImgRef.current.style.opacity = hasVideoRef.current ? String(1 - ss(0.004, 0.06, p)) : '1'
-        }
+        heroImgRef.current.style.opacity =
+          isTouch || !drawnRef.current ? '1' : String(1 - ss(0.004, 0.06, p))
       }
 
       // progress rail fill (desktop vertical + mobile horizontal)
@@ -248,6 +236,8 @@ export default function ScrollHero() {
         raf = requestAnimationFrame(loop)
       }
     }
+    // Expose kick so newly-loaded frames can nudge a redraw.
+    kickRef.current = kick
     // Nudge the loop awake on scroll; it idles once progress settles so the
     // page can reach rest (better perf + lets synthetic input settle).
     const st2 = ScrollTrigger.create({
@@ -260,9 +250,10 @@ export default function ScrollHero() {
     kick()
 
     return () => {
-      v.removeEventListener('loadedmetadata', onMeta)
+      kickRef.current = null
       st.kill()
       st2.kill()
+      if (ro) ro.disconnect()
       if (raf) cancelAnimationFrame(raf)
     }
   }, [reduce])
@@ -291,16 +282,13 @@ export default function ScrollHero() {
   return (
     <section id="scroll-hero" ref={wrapRef} style={{ height: `${scrollVh}vh` }} className="relative">
       <div ref={stageRef} className="sticky top-0 h-dvh w-full overflow-hidden bg-emerald-deep">
-        {/* Video */}
-        <video
-          ref={videoRef}
-          muted
-          playsInline
-          preload="auto"
-          disablePictureInPicture
-          className="absolute inset-0 h-full w-full object-cover"
+        {/* Scroll-scrubbed image sequence (desktop). Drawn frame-by-frame in the
+            rAF loop; the grade masks the 720p softness like it did for the video. */}
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 h-full w-full"
           style={{ filter: 'contrast(1.07) saturate(1.09) brightness(1.02)' }}
-        />{/* src is set programmatically (blob on desktop, streamed on touch) */}
+        />
 
         {/* Opening poster with drifting autumn leaves — the crisp still shows at
             the very top and crossfades to the scrubbing video as you scroll */}
@@ -440,3 +428,4 @@ export default function ScrollHero() {
     </section>
   )
 }
+
