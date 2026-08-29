@@ -7,7 +7,7 @@ import CountUp from './CountUp'
 
 // Versioned filename busts the year-long immutable cache when the video changes.
 const MP4 = '/hero/master-v4.mp4'
-const POSTER = '/hero/poster.jpg'
+const POSTER = '/hero/poster-v2.jpg'
 
 // Autumn falling-leaves that drift over the opening poster. Each leaf's colour,
 // drift, spin and timing is randomised once on mount.
