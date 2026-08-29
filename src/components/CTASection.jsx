@@ -49,8 +49,6 @@ function BandCTA({ eyebrow, heading, sub }) {
   return (
     <section className="relative overflow-hidden py-16 text-ivory sm:py-20" style={{ background: EMERALD_BG }}>
       <div className="pointer-events-none absolute inset-0 opacity-80" style={{ background: 'radial-gradient(70% 100% at 50% 0%, rgba(198,162,83,0.16), transparent 60%)' }} />
-      <div className="pointer-events-none absolute inset-x-5 inset-y-5 rounded-[1.4rem] border border-gold/25 sm:inset-x-10 sm:inset-y-7" />
-      <div className="pointer-events-none absolute inset-x-[1.6rem] inset-y-[1.6rem] rounded-[1.2rem] border border-gold/12 sm:inset-x-[2.85rem] sm:inset-y-[2.1rem]" />
       <div className="container-lux relative z-10">
         <Reveal className="mx-auto max-w-2xl text-center" variant="scale">
           <Fleuron className="mx-auto" />
