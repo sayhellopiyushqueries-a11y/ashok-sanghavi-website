@@ -31,11 +31,11 @@ function Crest() {
         <circle cx="120" cy="120" r="106" fill="none" stroke={GOLD} strokeWidth="1.4" />
         <circle cx="120" cy="120" r="70" fill="none" stroke={GOLD_SOFT} strokeWidth="0.9" opacity="0.55" />
 
-        {/* curved engraved text */}
-        <text fill={GOLD} fontSize="11" letterSpacing="3.2" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
+        {/* curved engraved text — sized so each arc clears the side diamonds */}
+        <text fill={GOLD} fontSize="8.4" letterSpacing="1.4" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
           <textPath href="#crestTop" startOffset="50%" textAnchor="middle">ASHOK SANGHAVI · FINANCIAL ADVISORY</textPath>
         </text>
-        <text fill={GOLD} fontSize="10" letterSpacing="3" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
+        <text fill={GOLD} fontSize="8.4" letterSpacing="2" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
           <textPath href="#crestBottom" startOffset="50%" textAnchor="middle">PEACE OF MIND THROUGH PLANNING</textPath>
         </text>
 
