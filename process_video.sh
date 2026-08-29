@@ -31,20 +31,14 @@ echo "### 2/4  Concatenate into one master"
 for f in $CLIPS; do echo "file '$f.mp4'" >> graded/list.txt; done
 ffmpeg -y -f concat -safe 0 -i graded/list.txt -c copy graded/master_raw.mp4 </dev/null
 
-# Web encode filter: a gentle denoise tames the baked grain so the file stays
-# light (grain is re-added subtly in CSS), scaled to a crisp 1600x900, then a
-# delogo box wipes the Gemini watermark in the bottom-right corner.
-WEB_VF="hqdn3d=4:3:4:4,scale=1600:900,delogo=x=1495:y=780:w=104:h=104"
+# Web encode filter: a gentle denoise tames the baked grain, kept at full HD
+# 1920x1080, then a delogo box wipes the Gemini watermark (bottom-right).
+WEB_VF="hqdn3d=3:2:3:3,scale=1920:1080,delogo=x=1780:y=925:w=130:h=130"
 
-echo "### 3/4  Web-optimized encodes (dense-ish keyframes g=10; the site blob-loads the mp4 for smooth scrubbing)"
+echo "### 3/4  Full-HD web master (1080p, crf 23, dense keyframes g=10; the site streams it via HTTP range)"
 ffmpeg -y -i graded/master_raw.mp4 -vf "$WEB_VF" \
-  -c:v libx264 -crf 27 -preset slow -g 10 -keyint_min 10 -sc_threshold 0 \
+  -c:v libx264 -crf 23 -preset slow -g 10 -keyint_min 10 -sc_threshold 0 \
   -pix_fmt yuv420p -movflags +faststart -an public/hero/master.mp4 </dev/null
-# webm is transcoded from the finished (already deloged) mp4 — vp9 with delogo
-# in one pass is unreliable on some builds, this is robust.
-ffmpeg -y -i public/hero/master.mp4 -vf "scale=1280:720" \
-  -c:v libvpx-vp9 -crf 42 -b:v 0 -g 10 -row-mt 1 -deadline good -cpu-used 3 \
-  -an public/hero/master.webm </dev/null
 
 echo "### 4/4  Poster frame"
 # The shipped poster is the clean HD building image (public/hero/poster.jpg).
