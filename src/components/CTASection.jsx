@@ -1,7 +1,13 @@
 import { Link } from 'react-router-dom'
 import Reveal from './Reveal'
 import Icon from './Icons'
+import Velaris from './Velaris'
 import { firm } from '../lib/site'
+
+// Living-gradient palette, tuned to the brand: emerald base, a luminous
+// emerald bloom, a hint of gold, and deep shadow. Lighter than a flat panel.
+const CTA_BG = '#0E3A28'
+const CTA_COLORS = ['#14563B', '#2F7E58', '#B98D3E', '#0A3020']
 
 // A small engraved fleuron divider — a classical touch.
 function Fleuron({ className = '' }) {
@@ -24,29 +30,21 @@ export default function CTASection({
   sub = 'A calm, unhurried conversation about where you are and where you want to be. No pressure, no cost, just clarity.',
 }) {
   return (
-    <section className="relative overflow-hidden py-28 text-ivory sm:py-36" style={{ background: 'var(--emerald-deep)' }}>
-      {/* layered gold glow */}
+    <section className="relative overflow-hidden py-16 text-ivory sm:py-24" style={{ background: CTA_BG }}>
+      {/* living-gradient WebGL background */}
+      <div className="absolute inset-0">
+        <Velaris height="100%" bg={CTA_BG} colors={CTA_COLORS} speed={1.1} grain={0.25} />
+      </div>
+      {/* readability scrim over the moving gradient */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-80"
-        style={{ background: 'radial-gradient(65% 100% at 50% 0%, rgba(198,162,83,0.18), transparent 62%)' }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{ background: 'radial-gradient(55% 90% at 50% 100%, rgba(198,162,83,0.1), transparent 60%)' }}
-      />
-      {/* faint film grain */}
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
-        style={{
-          backgroundImage:
-            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-        }}
+        className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(120% 90% at 50% 55%, rgba(10,42,27,0.15), rgba(10,42,27,0.5) 100%)' }}
       />
       {/* classical double hairline frame */}
       <div className="pointer-events-none absolute inset-x-4 inset-y-5 rounded-[1.5rem] border border-gold/25 sm:inset-x-10 sm:inset-y-8" />
       <div className="pointer-events-none absolute inset-x-[1.35rem] inset-y-[1.6rem] rounded-[1.3rem] border border-gold/12 sm:inset-x-[2.85rem] sm:inset-y-[2.35rem]" />
 
-      <div className="container-lux relative">
+      <div className="container-lux relative z-10">
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <Fleuron />

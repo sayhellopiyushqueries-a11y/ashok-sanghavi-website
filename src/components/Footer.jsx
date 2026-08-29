@@ -36,7 +36,7 @@ export default function Footer() {
   return (
     <footer
       className="relative text-ivory"
-      style={{ background: 'linear-gradient(180deg, #0E3A28 0%, #0A3020 60%, #082A1B 100%)' }}
+      style={{ background: 'linear-gradient(180deg, #17603F 0%, #124A32 55%, #0E3A28 100%)' }}
     >
       {/* Gold accent line clearly separates the footer from the CTA above */}
       <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(198,162,83,0.9), transparent)' }} />
