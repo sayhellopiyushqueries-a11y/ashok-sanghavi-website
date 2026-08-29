@@ -39,10 +39,11 @@ function Crest() {
           <textPath href="#crestBottom" startOffset="50%" textAnchor="middle">PEACE OF MIND THROUGH PLANNING</textPath>
         </text>
 
-        {/* side diamonds separating the two arcs */}
+        {/* side diamonds — both centred on the middle ring (r=106) at exactly
+            9 and 3 o'clock, so they sit level and in sequence */}
         <g fill={GOLD_SOFT}>
-          <path d="M 12 120 l 6 -6 6 6 -6 6 z" />
-          <path d="M 216 120 l 6 -6 6 6 -6 6 z" />
+          <path d="M 9 120 l 5 -5 5 5 -5 5 z" />
+          <path d="M 221 120 l 5 -5 5 5 -5 5 z" />
         </g>
 
         {/* monogram + established */}
