@@ -1,45 +1,74 @@
 import Reveal from './Reveal'
 import Breadcrumb from './Breadcrumb'
 import ImageSlot from './ImageSlot'
-import Icon from './Icons'
 
-const facts = [
-  { icon: 'clock', label: 'Established', value: '1988' },
-  { icon: 'pin', label: 'Location', value: 'Elkhart, Indiana' },
-  { icon: 'award', label: 'Credentials', value: 'CFP · ChFC · CLU' },
-  { icon: 'scale', label: 'Standard', value: 'Fiduciary' },
-]
+const GOLD = '#B08D3E'
+const GOLD_SOFT = '#C6A253'
+const EMERALD = '#14563B'
 
-// Premium "at a glance" emblem that fills the right side when there is no image.
-function GlanceCard() {
+// A classic engraved crest — the firm name curves around a serif monogram,
+// like a wax seal. Quiet, premium, and consistent as a brand mark.
+function Crest() {
   return (
-    <div className="relative mx-auto w-full max-w-sm lg:mx-0 lg:ml-auto">
-      <div className="pointer-events-none absolute -inset-3 rounded-[1.7rem] border border-gold/30" />
-      <div className="relative overflow-hidden rounded-[1.4rem] border border-gold/25 bg-ivory/70 p-8 shadow-soft backdrop-blur-sm">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full opacity-40 blur-2xl"
-          style={{ background: 'radial-gradient(circle, rgba(198,162,83,0.3), transparent 70%)' }}
-        />
-        <div className="relative flex items-center gap-3">
-          <span className="grid h-12 w-12 place-items-center rounded-full border border-gold/50 text-gold">
-            <span className="font-display text-lg text-emerald">AS</span>
-          </span>
-          <span className="font-sans text-[0.66rem] uppercase tracking-[0.28em] text-gold-deep">At a glance</span>
-        </div>
-        <ul className="relative mt-7 space-y-4">
-          {facts.map((f) => (
-            <li key={f.label} className="flex items-center gap-4 border-b border-gold/15 pb-4 last:border-0 last:pb-0">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-gold/25 text-gold">
-                <Icon name={f.icon} size={17} />
-              </span>
-              <span className="flex-1">
-                <span className="block font-sans text-[0.7rem] uppercase tracking-[0.18em] text-ink-muted">{f.label}</span>
-                <span className="block font-display text-[1.15rem] leading-tight text-emerald">{f.value}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="relative mx-auto flex w-full items-center justify-center lg:ml-auto">
+      <div
+        className="pointer-events-none absolute h-80 w-80 rounded-full opacity-50 blur-3xl"
+        style={{ background: 'radial-gradient(circle, rgba(198,162,83,0.22), transparent 70%)' }}
+      />
+      <svg
+        viewBox="0 0 240 240"
+        className="relative w-60 sm:w-72 lg:w-[19rem]"
+        role="img"
+        aria-label="Ashok Sanghavi Financial Advisory"
+      >
+        <defs>
+          <path id="crestTop" d="M 34 120 A 86 86 0 0 1 206 120" />
+          <path id="crestBottom" d="M 206 120 A 86 86 0 0 1 34 120" />
+        </defs>
+
+        {/* rings */}
+        <circle cx="120" cy="120" r="114" fill="none" stroke={GOLD_SOFT} strokeWidth="1" opacity="0.45" />
+        <circle cx="120" cy="120" r="106" fill="none" stroke={GOLD} strokeWidth="1.4" />
+        <circle cx="120" cy="120" r="70" fill="none" stroke={GOLD_SOFT} strokeWidth="0.9" opacity="0.55" />
+
+        {/* curved engraved text */}
+        <text fill={GOLD} fontSize="11" letterSpacing="3.2" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
+          <textPath href="#crestTop" startOffset="50%" textAnchor="middle">ASHOK SANGHAVI · FINANCIAL ADVISORY</textPath>
+        </text>
+        <text fill={GOLD} fontSize="10" letterSpacing="3" style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}>
+          <textPath href="#crestBottom" startOffset="50%" textAnchor="middle">PEACE OF MIND THROUGH PLANNING</textPath>
+        </text>
+
+        {/* side diamonds separating the two arcs */}
+        <g fill={GOLD_SOFT}>
+          <path d="M 12 120 l 6 -6 6 6 -6 6 z" />
+          <path d="M 216 120 l 6 -6 6 6 -6 6 z" />
+        </g>
+
+        {/* monogram + established */}
+        <text
+          x="120"
+          y="126"
+          textAnchor="middle"
+          fill={EMERALD}
+          fontSize="50"
+          style={{ fontFamily: '"Playfair Display", Georgia, serif', fontWeight: 600 }}
+        >
+          AS
+        </text>
+        <line x1="102" y1="140" x2="138" y2="140" stroke={GOLD_SOFT} strokeWidth="0.9" opacity="0.6" />
+        <text
+          x="120"
+          y="158"
+          textAnchor="middle"
+          fill={GOLD}
+          fontSize="9.5"
+          letterSpacing="3"
+          style={{ fontFamily: 'Inter, system-ui, sans-serif', fontWeight: 600 }}
+        >
+          EST. 1988
+        </text>
+      </svg>
     </div>
   )
 }
@@ -111,7 +140,7 @@ export default function PageHero({
                 parallax
               />
             ) : (
-              <GlanceCard />
+              <Crest />
             )}
           </Reveal>
         </div>

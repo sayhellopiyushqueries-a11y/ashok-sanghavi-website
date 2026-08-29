@@ -67,14 +67,8 @@ export const services = [
 
 export const nav = [
   { label: 'Home', to: '/' },
-  {
-    label: 'About',
-    to: '/about',
-    children: [
-      { label: 'About Ashok', to: '/about' },
-      { label: 'Core Beliefs', to: '/core-beliefs' },
-    ],
-  },
+  { label: 'About', to: '/about' },
+  { label: 'Core Beliefs', to: '/core-beliefs' },
   { label: 'Services', to: '/services', children: services.map((s) => ({ label: s.title, to: `/services/${s.slug}` })) },
   {
     label: 'Watch and Learn',

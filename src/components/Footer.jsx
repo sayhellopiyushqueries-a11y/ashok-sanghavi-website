@@ -151,12 +151,15 @@ export default function Footer() {
 
       {/* Bottom bar */}
       <div className="border-t border-ivory/10">
-        <div className="container-lux flex flex-col items-center justify-between gap-3 py-6 text-center sm:flex-row sm:text-left">
+        <div className="container-lux flex flex-col items-center gap-2 py-6 text-center sm:flex-row sm:justify-between sm:text-left">
           <p className="font-sans text-[0.78rem] text-sage-light/60">
             © {year} {firm.name}. All rights reserved.
           </p>
           <p className="font-sans text-[0.78rem] text-sage-light/60">
             Advisory services offered through {firm.entity}.
+          </p>
+          <p className="font-sans text-[0.78rem] text-sage-light/60">
+            Designed by <span className="font-semibold text-gold-light">Automated Codes</span>
           </p>
         </div>
       </div>
