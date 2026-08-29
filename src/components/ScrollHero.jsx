@@ -5,7 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
-const MP4 = '/hero/master.mp4'
+// Versioned filename busts the year-long immutable cache when the video changes.
+const MP4 = '/hero/master-v2.mp4'
 
 // smoothstep helper
 const ss = (a, b, x) => {
