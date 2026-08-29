@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { firm, services, social } from '../lib/site'
 import { partners } from '../lib/content'
 import Icon from './Icons'
@@ -33,6 +33,9 @@ function Monogram({ size = 'h-12 w-12', borderClass = 'border-gold/50', textClas
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const { pathname } = useLocation()
+  // The cream brand statement only belongs on a few key pages.
+  const showBrandBanner = ['/', '/about', '/contact'].includes(pathname)
   return (
     <footer
       className="relative text-ivory"
@@ -42,7 +45,8 @@ export default function Footer() {
       <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(198,162,83,0.9), transparent)' }} />
 
       {/* Brand banner — a calm, premium statement on a warm cream band.
-          Faint gold/sage shapes drift with the pointer for quiet depth. */}
+          Only shown on home, about and contact. */}
+      {showBrandBanner && (
       <div className="relative overflow-hidden" style={{ background: 'var(--cream)' }}>
         <ParallaxFloating sensitivity={1.2} className="hidden md:block">
           <FloatingElement className="left-[8%] top-[18%]" depth={0.6}>
@@ -82,6 +86,7 @@ export default function Footer() {
           </p>
         </div>
       </div>
+      )}
 
       {/* Columns */}
       <div className="container-lux grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
