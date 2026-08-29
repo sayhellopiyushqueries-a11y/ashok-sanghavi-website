@@ -3,7 +3,6 @@ import ScrollHero from '../components/ScrollHero'
 import Intro from '../sections/Intro'
 import WhatWeDo from '../sections/WhatWeDo'
 import Testimonials from '../sections/Testimonials'
-import FiduciaryBand from '../sections/FiduciaryBand'
 import FinalCTA from '../sections/FinalCTA'
 
 export default function Home() {
@@ -13,7 +12,6 @@ export default function Home() {
       <Intro />
       <WhatWeDo />
       <Testimonials />
-      <FiduciaryBand />
       <FinalCTA />
     </PageTransition>
   )
