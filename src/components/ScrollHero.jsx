@@ -6,7 +6,7 @@ import { heroScenes } from '../lib/site'
 import CountUp from './CountUp'
 
 // Versioned filename busts the year-long immutable cache when the video changes.
-const MP4 = '/hero/master-v3.mp4'
+const MP4 = '/hero/master-v4.mp4'
 
 // smoothstep helper
 const ss = (a, b, x) => {
@@ -39,10 +39,10 @@ export default function ScrollHero() {
     const v = videoRef.current
     if (!v) return
     const isTouch = window.matchMedia('(pointer: coarse)').matches
-    v.src = MP4
-    v.load()
 
     if (isTouch) {
+      v.src = MP4
+      v.load()
       v.loop = true
       v.muted = true
       v.autoplay = true
@@ -66,31 +66,29 @@ export default function ScrollHero() {
       }
     }
 
-    // Desktop: the clip is scrubbed by seeking on scroll. On a CDN each seek to
+    // Desktop: the clip is scrubbed by seeking on scroll. On a CDN, each seek to
     // an un-buffered spot triggers a byte-range fetch (network latency) → janky
     // scrub, even though it's smooth on localhost where the file is local. Fix:
-    // proactively download the whole clip once as a blob and swap to it, so
-    // every seek is instant in-memory. The native src above paints a first
-    // frame while the blob loads (the "Preparing the journey" shimmer covers it).
+    // download the whole (light) clip ONCE as a blob and scrub it in-memory, so
+    // every seek is instant. Single download — no separate streaming pass — so
+    // it's not heavy. The shimmer shows until the blob is ready.
     let objectUrl
     let cancelled = false
     fetch(MP4)
-      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error('range'))))
+      .then((r) => (r.ok ? r.blob() : Promise.reject(new Error('http'))))
       .then((b) => {
         if (cancelled) return
         objectUrl = URL.createObjectURL(b)
-        const resume = v.currentTime
         v.src = objectUrl
         v.load()
-        const restore = () => {
-          try {
-            v.currentTime = resume
-          } catch {}
-          v.removeEventListener('loadedmetadata', restore)
-        }
-        v.addEventListener('loadedmetadata', restore)
       })
-      .catch(() => {})
+      .catch(() => {
+        // Network/blob failure — fall back to plain streaming.
+        if (!cancelled) {
+          v.src = MP4
+          v.load()
+        }
+      })
 
     return () => {
       cancelled = true
@@ -249,9 +247,7 @@ export default function ScrollHero() {
           preload="auto"
           disablePictureInPicture
           className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source src={MP4} type="video/mp4" />
-        </video>
+        />{/* src is set programmatically (blob on desktop, streamed on touch) */}
 
         {/* Premium light overlays — never a heavy dark scrim */}
         <div
