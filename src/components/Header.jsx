@@ -41,11 +41,13 @@ function Wordmark({ compact, light }) {
         >
           Ashok Sanghavi
         </span>
+        {/* gold rule + motto, echoing the brand lockup */}
+        <span className="mt-1 block h-px w-6 bg-gold transition-all duration-500 sm:w-7" />
         <span
-          className="block font-sans text-[0.62rem] uppercase tracking-[0.34em] transition-colors duration-500"
+          className="mt-1 block font-sans text-[0.5rem] uppercase tracking-[0.2em] transition-colors duration-500 sm:text-[0.54rem]"
           style={{ color: light ? 'rgba(207,225,213,0.85)' : 'var(--ink-muted, #6E7B72)' }}
         >
-          Financial Advisory
+          Peace of mind through planning
         </span>
       </span>
     </Link>
