@@ -19,9 +19,9 @@ function Monogram({ size = 'h-12 w-12', borderClass = 'border-gold/50', textClas
   return (
     <span className={`relative grid ${size} shrink-0 place-items-center overflow-hidden rounded-full border ${borderClass}`}>
       <img
-        src="/logo.svg"
+        src="/logo.png"
         alt=""
-        className="h-full w-full object-contain p-2"
+        className="h-full w-full object-cover"
         onError={(e) => {
           e.currentTarget.style.display = 'none'
           e.currentTarget.nextElementSibling.style.display = 'block'

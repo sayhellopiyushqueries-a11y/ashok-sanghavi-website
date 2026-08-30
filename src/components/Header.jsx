@@ -19,9 +19,9 @@ function Wordmark({ compact, light }) {
       >
         {/* Logo slot — drop /public/logo.svg (or .png) and it appears here */}
         <img
-          src="/logo.svg"
+          src="/logo.png"
           alt=""
-          className="h-full w-full object-contain p-1.5"
+          className="h-full w-full object-cover"
           onError={(e) => {
             e.currentTarget.style.display = 'none'
             e.currentTarget.nextElementSibling.style.display = 'block'
