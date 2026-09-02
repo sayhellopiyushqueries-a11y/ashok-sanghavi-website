@@ -6,14 +6,6 @@ import Reveal from '../components/Reveal'
 import Icon from '../components/Icons'
 import { firm, social } from '../lib/site'
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CONNECT THE FORM HERE.
-// Leave FORM_ENDPOINT empty to keep the safe demo behaviour (no mail is sent,
-// the form just shows a thank you). To make it live, paste the POST URL from
-// your form service (Formspree, Basin, Netlify Forms, your own API, etc.).
-const FORM_ENDPOINT = ''
-// ─────────────────────────────────────────────────────────────────────────────
-
 const mapSrc =
   'https://www.google.com/maps?q=25416%20County%206%20Road%20Suite%20102%20Elkhart%20IN%2046514&output=embed'
 
@@ -37,17 +29,12 @@ export default function Contact() {
   async function handleSubmit(e) {
     e.preventDefault()
     const data = Object.fromEntries(new FormData(e.currentTarget).entries())
-    if (!FORM_ENDPOINT) {
-      // Demo mode: no mail is sent.
-      setStatus('done')
-      return
-    }
     try {
       setStatus('sending')
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, source: 'contact' }),
       })
       setStatus(res.ok ? 'done' : 'error')
     } catch {

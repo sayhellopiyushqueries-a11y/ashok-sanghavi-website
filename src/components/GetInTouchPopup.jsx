@@ -4,11 +4,7 @@ import Icon from './Icons'
 import { firm } from '../lib/site'
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Same convention as the Contact page: leave empty for the safe demo behaviour
-// (no mail is sent, a thank you is shown). Paste your form POST URL to go live.
-const FORM_ENDPOINT = ''
 const SESSION_KEY = 'gitPopupDismissed'
-// ─────────────────────────────────────────────────────────────────────────────
 
 const inputCls =
   'w-full rounded-lg border border-gold/25 bg-ivory px-3.5 py-2.5 font-sans text-[0.92rem] text-ink outline-none transition-all duration-300 placeholder:text-ink-muted/60 focus:border-gold focus:ring-2 focus:ring-gold/20'
@@ -47,16 +43,12 @@ export default function GetInTouchPopup() {
   async function handleSubmit(e) {
     e.preventDefault()
     const data = Object.fromEntries(new FormData(e.currentTarget).entries())
-    if (!FORM_ENDPOINT) {
-      setStatus('done')
-      return
-    }
     try {
       setStatus('sending')
-      const res = await fetch(FORM_ENDPOINT, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, source: 'popup' }),
       })
       setStatus(res.ok ? 'done' : 'error')
     } catch {

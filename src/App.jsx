@@ -18,6 +18,7 @@ import BlogArticle from './pages/BlogArticle'
 import Calculators from './pages/Calculators'
 import Contact from './pages/Contact'
 import ComingSoon from './pages/ComingSoon'
+import Admin from './admin/Admin'
 import { useSmoothScroll, getLenis } from './lib/useSmoothScroll'
 
 function ScrollManager() {
@@ -35,6 +36,15 @@ function ScrollManager() {
 export default function App() {
   useSmoothScroll()
   const location = useLocation()
+
+  // The admin panel is its own app — no marketing chrome (header/footer/popups).
+  if (location.pathname.startsWith('/admin')) {
+    return (
+      <Routes location={location}>
+        <Route path="/admin/*" element={<Admin />} />
+      </Routes>
+    )
+  }
 
   return (
     <>
