@@ -1,22 +1,35 @@
 import bcrypt from 'bcryptjs'
 import { SignJWT, jwtVerify } from 'jose'
+import { sql } from './db.js'
 
 export const COOKIE = 'as_admin'
 const MAX_AGE = 7 * 24 * 3600 // 7 days
 
-const secret = () => new TextEncoder().encode(process.env.JWT_SECRET || 'dev-only-insecure-secret')
+// The signing secret lives in the DB (app_settings) so the only env var the
+// deployment needs is DATABASE_URL. Cached in memory after the first read.
+let cachedKey = null
+async function secretKey() {
+  if (cachedKey) return cachedKey
+  let value = process.env.JWT_SECRET || 'dev-only-insecure-secret'
+  try {
+    const rows = await sql`SELECT value FROM app_settings WHERE key = 'jwt_secret' LIMIT 1`
+    if (rows[0]?.value) value = rows[0].value
+  } catch { /* fall back to env/default */ }
+  cachedKey = new TextEncoder().encode(value)
+  return cachedKey
+}
 
 export async function createToken(payload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime('7d')
-    .sign(secret())
+    .sign(await secretKey())
 }
 
 export async function verifyToken(token) {
   try {
-    const { payload } = await jwtVerify(token, secret())
+    const { payload } = await jwtVerify(token, await secretKey())
     return payload
   } catch {
     return null

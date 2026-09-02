@@ -82,7 +82,7 @@ function Shell({ email, onLogout, children }) {
           </div>
           <div className="flex items-center gap-3 text-[0.85rem]">
             <a href="/" target="_blank" rel="noreferrer" className="text-ink-soft hover:text-emerald">View site ↗</a>
-            <span className="hidden text-ink-muted sm:inline">{email}</span>
+            <Link to="/admin/account" className="hidden text-ink-soft hover:text-emerald sm:inline">{email}</Link>
             <button onClick={onLogout} className={btnGhost}>Log out</button>
           </div>
         </div>
@@ -280,6 +280,45 @@ function Inbox() {
   )
 }
 
+// ── Account (change password) ───────────────────────────────────────
+function Account() {
+  const [cur, setCur] = useState('')
+  const [next, setNext] = useState('')
+  const [confirm, setConfirm] = useState('')
+  const [msg, setMsg] = useState(null)
+  const [busy, setBusy] = useState(false)
+
+  async function submit(e) {
+    e.preventDefault()
+    setMsg(null)
+    if (next !== confirm) return setMsg({ type: 'err', text: 'New passwords do not match' })
+    setBusy(true)
+    try {
+      await api.post('/api/auth/change-password', { currentPassword: cur, newPassword: next })
+      setMsg({ type: 'ok', text: 'Password changed. Use it next time you log in.' })
+      setCur(''); setNext(''); setConfirm('')
+    } catch (e2) {
+      setMsg({ type: 'err', text: e2.message })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <form onSubmit={submit} className="mx-auto max-w-md">
+      <h1 className="mb-6 font-display text-2xl text-emerald">Change password</h1>
+      <label className={label}>Current password</label>
+      <input className={field} type="password" value={cur} onChange={(e) => setCur(e.target.value)} required />
+      <label className={`${label} mt-4`}>New password</label>
+      <input className={field} type="password" value={next} onChange={(e) => setNext(e.target.value)} required minLength={8} />
+      <label className={`${label} mt-4`}>Confirm new password</label>
+      <input className={field} type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
+      {msg && <p className={`mt-3 text-[0.9rem] ${msg.type === 'ok' ? 'text-emerald' : 'text-red-600'}`}>{msg.text}</p>}
+      <button className={`${btnGold} mt-6`} disabled={busy}>{busy ? 'Saving…' : 'Update password'}</button>
+    </form>
+  )
+}
+
 // ── Root ────────────────────────────────────────────────────────────
 export default function Admin() {
   const [auth, setAuth] = useState({ loading: true, user: null })
@@ -310,6 +349,7 @@ export default function Admin() {
         <Route path="posts/new" element={<PostEditor />} />
         <Route path="posts/:slug" element={<PostEditor />} />
         <Route path="inbox" element={<Inbox />} />
+        <Route path="account" element={<Account />} />
         <Route path="*" element={<Navigate to="/admin/posts" replace />} />
       </Routes>
     </Shell>
