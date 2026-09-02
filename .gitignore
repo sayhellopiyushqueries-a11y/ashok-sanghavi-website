@@ -5,3 +5,9 @@ raw
 *.log
 .vercel
 .DS_Store
+
+# Secrets & local env
+.env
+.env.*
+!.env.example
+.vercel
